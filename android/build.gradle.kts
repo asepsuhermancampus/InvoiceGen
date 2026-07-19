@@ -22,3 +22,21 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
+
+subprojects {
+    afterEvaluate {
+        val ext = extensions.findByName("android")
+        if (ext != null) {
+            try {
+                val androidExt = ext as org.gradle.api.plugins.ExtensionAware
+                val namespace = androidExt.extensions.extraProperties.properties["namespace"]
+                if (namespace == null) {
+                    val namespaceMethod = ext.javaClass.getMethod("setNamespace", String::class.java)
+                    namespaceMethod.invoke(ext, project.group.toString())
+                }
+            } catch (e: Exception) {
+                // Ignore if method not found
+            }
+        }
+    }
+}
