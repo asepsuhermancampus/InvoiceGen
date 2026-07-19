@@ -35,7 +35,7 @@ jobs:
 
       - name: Fix Isar Plugin Namespace (AGP 8+)
         run: |
-          find ~/.pub-cache/hosted/pub.dev/isar_flutter_libs-*/android/build.gradle -type f -exec sed -i 's/group "dev.isar.isar_flutter_libs"/group "dev.isar.isar_flutter_libs"\n    namespace "dev.isar.isar_flutter_libs"/g' {} +
+          find ~/.pub-cache/hosted/pub.dev/isar_flutter_libs-*/android/build.gradle -type f -exec sed -i 's/android {/android {\n    namespace "dev.isar.isar_flutter_libs"/g' {} +
 
       - name: Build APK
         run: flutter build apk --release -v
