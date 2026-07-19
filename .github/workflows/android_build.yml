@@ -38,7 +38,7 @@ jobs:
           find ~/.pub-cache/hosted/pub.dev/isar_flutter_libs-*/android/build.gradle -type f -exec sed -i 's/group "dev.isar.isar_flutter_libs"/group "dev.isar.isar_flutter_libs"\n    namespace "dev.isar.isar_flutter_libs"/g' {} +
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release -v
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
