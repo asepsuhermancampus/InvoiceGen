@@ -62,59 +62,84 @@ const InvoiceSchema = CollectionSchema(
       name: r'grandTotal',
       type: IsarType.double,
     ),
-    r'invoiceNumber': PropertySchema(
+    r'hideSubtotal': PropertySchema(
       id: 9,
+      name: r'hideSubtotal',
+      type: IsarType.bool,
+    ),
+    r'hideTax': PropertySchema(
+      id: 10,
+      name: r'hideTax',
+      type: IsarType.bool,
+    ),
+    r'introText': PropertySchema(
+      id: 11,
+      name: r'introText',
+      type: IsarType.string,
+    ),
+    r'invoiceNumber': PropertySchema(
+      id: 12,
       name: r'invoiceNumber',
       type: IsarType.string,
     ),
     r'items': PropertySchema(
-      id: 10,
+      id: 13,
       name: r'items',
       type: IsarType.objectList,
       target: r'InvoiceItem',
     ),
     r'notes': PropertySchema(
-      id: 11,
+      id: 14,
       name: r'notes',
       type: IsarType.string,
     ),
+    r'paymentTerms': PropertySchema(
+      id: 15,
+      name: r'paymentTerms',
+      type: IsarType.string,
+    ),
     r'phone': PropertySchema(
-      id: 12,
+      id: 16,
       name: r'phone',
       type: IsarType.string,
     ),
     r'pphRate': PropertySchema(
-      id: 13,
+      id: 17,
       name: r'pphRate',
       type: IsarType.double,
     ),
+    r'signatorName': PropertySchema(
+      id: 18,
+      name: r'signatorName',
+      type: IsarType.string,
+    ),
     r'signaturePath': PropertySchema(
-      id: 14,
+      id: 19,
       name: r'signaturePath',
       type: IsarType.string,
     ),
     r'status': PropertySchema(
-      id: 15,
+      id: 20,
       name: r'status',
       type: IsarType.string,
     ),
     r'subtotal': PropertySchema(
-      id: 16,
+      id: 21,
       name: r'subtotal',
       type: IsarType.double,
     ),
     r'taxRate': PropertySchema(
-      id: 17,
+      id: 22,
       name: r'taxRate',
       type: IsarType.double,
     ),
     r'taxTotal': PropertySchema(
-      id: 18,
+      id: 23,
       name: r'taxTotal',
       type: IsarType.double,
     ),
     r'terbilang': PropertySchema(
-      id: 19,
+      id: 24,
       name: r'terbilang',
       type: IsarType.string,
     )
@@ -195,6 +220,12 @@ int _invoiceEstimateSize(
     }
   }
   {
+    final value = object.introText;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.invoiceNumber;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -215,7 +246,19 @@ int _invoiceEstimateSize(
     }
   }
   {
+    final value = object.paymentTerms;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.phone;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.signatorName;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -256,22 +299,27 @@ void _invoiceSerialize(
   writer.writeString(offsets[6], object.fax);
   writer.writeString(offsets[7], object.footer);
   writer.writeDouble(offsets[8], object.grandTotal);
-  writer.writeString(offsets[9], object.invoiceNumber);
+  writer.writeBool(offsets[9], object.hideSubtotal);
+  writer.writeBool(offsets[10], object.hideTax);
+  writer.writeString(offsets[11], object.introText);
+  writer.writeString(offsets[12], object.invoiceNumber);
   writer.writeObjectList<InvoiceItem>(
-    offsets[10],
+    offsets[13],
     allOffsets,
     InvoiceItemSchema.serialize,
     object.items,
   );
-  writer.writeString(offsets[11], object.notes);
-  writer.writeString(offsets[12], object.phone);
-  writer.writeDouble(offsets[13], object.pphRate);
-  writer.writeString(offsets[14], object.signaturePath);
-  writer.writeString(offsets[15], object.status);
-  writer.writeDouble(offsets[16], object.subtotal);
-  writer.writeDouble(offsets[17], object.taxRate);
-  writer.writeDouble(offsets[18], object.taxTotal);
-  writer.writeString(offsets[19], object.terbilang);
+  writer.writeString(offsets[14], object.notes);
+  writer.writeString(offsets[15], object.paymentTerms);
+  writer.writeString(offsets[16], object.phone);
+  writer.writeDouble(offsets[17], object.pphRate);
+  writer.writeString(offsets[18], object.signatorName);
+  writer.writeString(offsets[19], object.signaturePath);
+  writer.writeString(offsets[20], object.status);
+  writer.writeDouble(offsets[21], object.subtotal);
+  writer.writeDouble(offsets[22], object.taxRate);
+  writer.writeDouble(offsets[23], object.taxTotal);
+  writer.writeString(offsets[24], object.terbilang);
 }
 
 Invoice _invoiceDeserialize(
@@ -290,24 +338,29 @@ Invoice _invoiceDeserialize(
   object.fax = reader.readStringOrNull(offsets[6]);
   object.footer = reader.readStringOrNull(offsets[7]);
   object.grandTotal = reader.readDoubleOrNull(offsets[8]);
+  object.hideSubtotal = reader.readBool(offsets[9]);
+  object.hideTax = reader.readBool(offsets[10]);
   object.id = id;
-  object.invoiceNumber = reader.readStringOrNull(offsets[9]);
+  object.introText = reader.readStringOrNull(offsets[11]);
+  object.invoiceNumber = reader.readStringOrNull(offsets[12]);
   object.items = reader.readObjectList<InvoiceItem>(
-        offsets[10],
+        offsets[13],
         InvoiceItemSchema.deserialize,
         allOffsets,
         InvoiceItem(),
       ) ??
       [];
-  object.notes = reader.readStringOrNull(offsets[11]);
-  object.phone = reader.readStringOrNull(offsets[12]);
-  object.pphRate = reader.readDoubleOrNull(offsets[13]);
-  object.signaturePath = reader.readStringOrNull(offsets[14]);
-  object.status = reader.readStringOrNull(offsets[15]);
-  object.subtotal = reader.readDoubleOrNull(offsets[16]);
-  object.taxRate = reader.readDoubleOrNull(offsets[17]);
-  object.taxTotal = reader.readDoubleOrNull(offsets[18]);
-  object.terbilang = reader.readStringOrNull(offsets[19]);
+  object.notes = reader.readStringOrNull(offsets[14]);
+  object.paymentTerms = reader.readStringOrNull(offsets[15]);
+  object.phone = reader.readStringOrNull(offsets[16]);
+  object.pphRate = reader.readDoubleOrNull(offsets[17]);
+  object.signatorName = reader.readStringOrNull(offsets[18]);
+  object.signaturePath = reader.readStringOrNull(offsets[19]);
+  object.status = reader.readStringOrNull(offsets[20]);
+  object.subtotal = reader.readDoubleOrNull(offsets[21]);
+  object.taxRate = reader.readDoubleOrNull(offsets[22]);
+  object.taxTotal = reader.readDoubleOrNull(offsets[23]);
+  object.terbilang = reader.readStringOrNull(offsets[24]);
   return object;
 }
 
@@ -337,8 +390,14 @@ P _invoiceDeserializeProp<P>(
     case 8:
       return (reader.readDoubleOrNull(offset)) as P;
     case 9:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 10:
+      return (reader.readBool(offset)) as P;
+    case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
+      return (reader.readStringOrNull(offset)) as P;
+    case 13:
       return (reader.readObjectList<InvoiceItem>(
             offset,
             InvoiceItemSchema.deserialize,
@@ -346,23 +405,27 @@ P _invoiceDeserializeProp<P>(
             InvoiceItem(),
           ) ??
           []) as P;
-    case 11:
-      return (reader.readStringOrNull(offset)) as P;
-    case 12:
-      return (reader.readStringOrNull(offset)) as P;
-    case 13:
-      return (reader.readDoubleOrNull(offset)) as P;
     case 14:
       return (reader.readStringOrNull(offset)) as P;
     case 15:
       return (reader.readStringOrNull(offset)) as P;
     case 16:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 17:
       return (reader.readDoubleOrNull(offset)) as P;
     case 18:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 19:
+      return (reader.readStringOrNull(offset)) as P;
+    case 20:
+      return (reader.readStringOrNull(offset)) as P;
+    case 21:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 22:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 23:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 24:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1566,6 +1629,26 @@ extension InvoiceQueryFilter
     });
   }
 
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> hideSubtotalEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hideSubtotal',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> hideTaxEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hideTax',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<Invoice, Invoice, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1614,6 +1697,152 @@ extension InvoiceQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'introText',
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'introText',
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'introText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'introText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'introText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'introText',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'introText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'introText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'introText',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'introText',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'introText',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> introTextIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'introText',
+        value: '',
       ));
     });
   }
@@ -1997,6 +2226,154 @@ extension InvoiceQueryFilter
     });
   }
 
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'paymentTerms',
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition>
+      paymentTermsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'paymentTerms',
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'paymentTerms',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'paymentTerms',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'paymentTerms',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'paymentTerms',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'paymentTerms',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'paymentTerms',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'paymentTerms',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'paymentTerms',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> paymentTermsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'paymentTerms',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition>
+      paymentTermsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'paymentTerms',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Invoice, Invoice, QAfterFilterCondition> phoneIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2217,6 +2594,154 @@ extension InvoiceQueryFilter
         upper: upper,
         includeUpper: includeUpper,
         epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'signatorName',
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition>
+      signatorNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'signatorName',
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'signatorName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'signatorName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'signatorName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'signatorName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'signatorName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'signatorName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'signatorName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'signatorName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition> signatorNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'signatorName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterFilterCondition>
+      signatorNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'signatorName',
+        value: '',
       ));
     });
   }
@@ -3058,6 +3583,42 @@ extension InvoiceQuerySortBy on QueryBuilder<Invoice, Invoice, QSortBy> {
     });
   }
 
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByHideSubtotal() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hideSubtotal', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByHideSubtotalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hideSubtotal', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByHideTax() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hideTax', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByHideTaxDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hideTax', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByIntroText() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'introText', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByIntroTextDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'introText', Sort.desc);
+    });
+  }
+
   QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByInvoiceNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'invoiceNumber', Sort.asc);
@@ -3082,6 +3643,18 @@ extension InvoiceQuerySortBy on QueryBuilder<Invoice, Invoice, QSortBy> {
     });
   }
 
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByPaymentTerms() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paymentTerms', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByPaymentTermsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paymentTerms', Sort.desc);
+    });
+  }
+
   QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByPhone() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'phone', Sort.asc);
@@ -3103,6 +3676,18 @@ extension InvoiceQuerySortBy on QueryBuilder<Invoice, Invoice, QSortBy> {
   QueryBuilder<Invoice, Invoice, QAfterSortBy> sortByPphRateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pphRate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortBySignatorName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signatorName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> sortBySignatorNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signatorName', Sort.desc);
     });
   }
 
@@ -3289,6 +3874,30 @@ extension InvoiceQuerySortThenBy
     });
   }
 
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByHideSubtotal() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hideSubtotal', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByHideSubtotalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hideSubtotal', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByHideTax() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hideTax', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByHideTaxDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hideTax', Sort.desc);
+    });
+  }
+
   QueryBuilder<Invoice, Invoice, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -3298,6 +3907,18 @@ extension InvoiceQuerySortThenBy
   QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByIntroText() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'introText', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByIntroTextDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'introText', Sort.desc);
     });
   }
 
@@ -3325,6 +3946,18 @@ extension InvoiceQuerySortThenBy
     });
   }
 
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByPaymentTerms() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paymentTerms', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByPaymentTermsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paymentTerms', Sort.desc);
+    });
+  }
+
   QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByPhone() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'phone', Sort.asc);
@@ -3346,6 +3979,18 @@ extension InvoiceQuerySortThenBy
   QueryBuilder<Invoice, Invoice, QAfterSortBy> thenByPphRateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'pphRate', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenBySignatorName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signatorName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QAfterSortBy> thenBySignatorNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'signatorName', Sort.desc);
     });
   }
 
@@ -3484,6 +4129,25 @@ extension InvoiceQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Invoice, Invoice, QDistinct> distinctByHideSubtotal() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hideSubtotal');
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QDistinct> distinctByHideTax() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hideTax');
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QDistinct> distinctByIntroText(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'introText', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Invoice, Invoice, QDistinct> distinctByInvoiceNumber(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3499,6 +4163,13 @@ extension InvoiceQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Invoice, Invoice, QDistinct> distinctByPaymentTerms(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'paymentTerms', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Invoice, Invoice, QDistinct> distinctByPhone(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -3509,6 +4180,13 @@ extension InvoiceQueryWhereDistinct
   QueryBuilder<Invoice, Invoice, QDistinct> distinctByPphRate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'pphRate');
+    });
+  }
+
+  QueryBuilder<Invoice, Invoice, QDistinct> distinctBySignatorName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'signatorName', caseSensitive: caseSensitive);
     });
   }
 
@@ -3615,6 +4293,24 @@ extension InvoiceQueryProperty
     });
   }
 
+  QueryBuilder<Invoice, bool, QQueryOperations> hideSubtotalProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hideSubtotal');
+    });
+  }
+
+  QueryBuilder<Invoice, bool, QQueryOperations> hideTaxProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hideTax');
+    });
+  }
+
+  QueryBuilder<Invoice, String?, QQueryOperations> introTextProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'introText');
+    });
+  }
+
   QueryBuilder<Invoice, String?, QQueryOperations> invoiceNumberProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'invoiceNumber');
@@ -3633,6 +4329,12 @@ extension InvoiceQueryProperty
     });
   }
 
+  QueryBuilder<Invoice, String?, QQueryOperations> paymentTermsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'paymentTerms');
+    });
+  }
+
   QueryBuilder<Invoice, String?, QQueryOperations> phoneProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'phone');
@@ -3642,6 +4344,12 @@ extension InvoiceQueryProperty
   QueryBuilder<Invoice, double?, QQueryOperations> pphRateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pphRate');
+    });
+  }
+
+  QueryBuilder<Invoice, String?, QQueryOperations> signatorNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'signatorName');
     });
   }
 

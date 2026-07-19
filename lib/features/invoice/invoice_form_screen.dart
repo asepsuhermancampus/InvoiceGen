@@ -22,6 +22,10 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   
   late TextEditingController _invoiceNumberController;
   late TextEditingController _notesController;
+  late TextEditingController _introTextController;
+  late TextEditingController _paymentTermsController;
+  late TextEditingController _signatorNameController;
+  
   DateTime _selectedDate = DateTime.now();
   
   Customer? _selectedCustomer;
@@ -30,6 +34,9 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   String _docType = 'Invoice';
   String _status = 'Draft';
   String _currency = 'IDR';
+  
+  bool _hideSubtotal = false;
+  bool _hideTax = false;
   
   List<InvoiceItem> _items = [];
   
@@ -47,6 +54,9 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   void initState() {
     super.initState();
     _notesController = TextEditingController(text: widget.invoice?.notes ?? '');
+    _introTextController = TextEditingController(text: widget.invoice?.introText ?? '');
+    _paymentTermsController = TextEditingController(text: widget.invoice?.paymentTerms ?? '');
+    _signatorNameController = TextEditingController(text: widget.invoice?.signatorName ?? '');
     
     if (widget.invoice != null) {
       _invoiceNumberController = TextEditingController(text: widget.invoice!.invoiceNumber ?? '');
@@ -60,6 +70,8 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
       _items = List.from(widget.invoice!.items);
       _taxRate = widget.invoice!.taxRate ?? 11.0;
       _pphRate = widget.invoice!.pphRate ?? 0.0;
+      _hideSubtotal = widget.invoice!.hideSubtotal;
+      _hideTax = widget.invoice!.hideTax;
       _recalculateTotals();
     } else {
       final prefix = _getPrefixForType(_docType);
@@ -83,6 +95,9 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   void dispose() {
     _invoiceNumberController.dispose();
     _notesController.dispose();
+    _introTextController.dispose();
+    _paymentTermsController.dispose();
+    _signatorNameController.dispose();
     super.dispose();
   }
 
@@ -120,8 +135,8 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
 
   void _save() async {
     if (_formKey.currentState!.validate()) {
-      if (_selectedCustomer == null || _selectedCompany == null) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pilih Company dan Customer')));
+      if (_selectedCompany == null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pilih Company')));
         return;
       }
 
@@ -136,6 +151,11 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
       newInvoice.taxRate = _taxRate;
       newInvoice.pphRate = _pphRate;
       newInvoice.notes = _notesController.text;
+      newInvoice.introText = _introTextController.text;
+      newInvoice.paymentTerms = _paymentTermsController.text;
+      newInvoice.signatorName = _signatorNameController.text;
+      newInvoice.hideSubtotal = _hideSubtotal;
+      newInvoice.hideTax = _hideTax;
       
       newInvoice.subtotal = _subtotal;
       newInvoice.discountTotal = _discountTotal;
@@ -196,10 +216,47 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
             _buildCustomerSelector(),
             const SizedBox(height: 16),
             
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _invoiceNumberController,
+                    decoration: const InputDecoration(labelText: 'Nomor Invoice'),
+                    validator: (val) => val != null && val.isEmpty ? 'Wajib diisi' : null,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: InkWell(
+                    onTap: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null) {
+                        setState(() => _selectedDate = picked);
+                      }
+                    },
+                    child: InputDecorator(
+                      decoration: const InputDecoration(labelText: 'Tanggal Invoice'),
+                      child: Text(DateFormat('dd MMM yyyy').format(_selectedDate)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            
             TextFormField(
-              controller: _invoiceNumberController,
-              decoration: const InputDecoration(labelText: 'Nomor Invoice'),
-              validator: (val) => val != null && val.isEmpty ? 'Wajib diisi' : null,
+              controller: _introTextController,
+              decoration: const InputDecoration(
+                labelText: 'Teks Pembuka (Opsional)', 
+                hintText: 'Cth: Dengan Hormat,\nBersama dengan ini kami berikan penawaran harga sebagai berikut :',
+                alignLabelWithHint: true,
+              ),
+              maxLines: 3,
             ),
             const SizedBox(height: 16),
             
@@ -258,13 +315,58 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
               ],
             ),
             
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: CheckboxListTile(
+                    title: const Text('Sembunyikan Subtotal', style: TextStyle(fontSize: 12)),
+                    value: _hideSubtotal,
+                    onChanged: (val) => setState(() => _hideSubtotal = val ?? false),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                Expanded(
+                  child: CheckboxListTile(
+                    title: const Text('Sembunyikan PPN', style: TextStyle(fontSize: 12)),
+                    value: _hideTax,
+                    onChanged: (val) => setState(() => _hideTax = val ?? false),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ],
+            ),
+            
             const SizedBox(height: 24),
             Text('Subtotal: ${currencyFormat.format(_subtotal)}', style: const TextStyle(fontWeight: FontWeight.bold)),
             Text('Diskon: ${currencyFormat.format(_discountTotal)}'),
             Text('PPN: ${currencyFormat.format(_taxTotal)}'),
-            Text('Grand Total: ${currencyFormat.format(_grandTotal)}', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            Text('Total: ${currencyFormat.format(_grandTotal)}', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Text('Terbilang: $_terbilang', style: const TextStyle(fontStyle: FontStyle.italic)),
+            
+            const SizedBox(height: 24),
+            const Divider(),
+            Text('Informasi Tambahan', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 8),
+            TextFormField(
+              controller: _notesController,
+              decoration: const InputDecoration(labelText: 'Keterangan (Kiri)', alignLabelWithHint: true),
+              maxLines: 3,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _paymentTermsController,
+              decoration: const InputDecoration(labelText: 'Syarat Pembayaran (Tengah)', alignLabelWithHint: true),
+              maxLines: 3,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _signatorNameController,
+              decoration: const InputDecoration(labelText: 'Nama Penandatangan (Kanan)'),
+            ),
           ],
         ),
       ),
@@ -291,10 +393,14 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
       future: ref.read(customerRepositoryProvider).getAllCustomers(),
       builder: (context, snapshot) {
         final items = snapshot.data ?? [];
+        final dropdownItems = [
+          const DropdownMenuItem<Customer>(value: null, child: Text('Tidak Ada (Kosong)')),
+          ...items.map((c) => DropdownMenuItem(value: c, child: Text(c.name ?? ''))),
+        ];
         return DropdownButtonFormField<Customer>(
-          initialValue: _selectedCustomer,
-          decoration: const InputDecoration(labelText: 'Pilih Customer'),
-          items: items.map((c) => DropdownMenuItem(value: c, child: Text(c.name ?? ''))).toList(),
+          value: _selectedCustomer,
+          decoration: const InputDecoration(labelText: 'Pilih Customer (Opsional)'),
+          items: dropdownItems,
           onChanged: (val) => setState(() => _selectedCustomer = val),
         );
       }

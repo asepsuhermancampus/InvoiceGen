@@ -34,6 +34,12 @@ class Invoice {
 
   // Status Enum as String: "Draft", "Sent", "Paid"
   String? status; 
+
+  String? introText;
+  bool hideSubtotal = false;
+  bool hideTax = false;
+  String? paymentTerms;
+  String? signatorName;
   
   double? subtotal;
   double? discountTotal;

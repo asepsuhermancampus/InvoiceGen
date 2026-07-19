@@ -19,6 +19,9 @@ class Company {
   String? email;
   String? website;
   String? npwp;
+  String? bankName;
+  String? bankAccount;
+  String? accountName;
   String? slogan;
 
   bool isDefault = false;

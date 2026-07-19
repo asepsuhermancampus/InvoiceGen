@@ -17,78 +17,93 @@ const CompanySchema = CollectionSchema(
   name: r'Company',
   id: -3921622125198845844,
   properties: {
-    r'address': PropertySchema(
+    r'accountName': PropertySchema(
       id: 0,
+      name: r'accountName',
+      type: IsarType.string,
+    ),
+    r'address': PropertySchema(
+      id: 1,
       name: r'address',
       type: IsarType.string,
     ),
+    r'bankAccount': PropertySchema(
+      id: 2,
+      name: r'bankAccount',
+      type: IsarType.string,
+    ),
+    r'bankName': PropertySchema(
+      id: 3,
+      name: r'bankName',
+      type: IsarType.string,
+    ),
     r'branchName': PropertySchema(
-      id: 1,
+      id: 4,
       name: r'branchName',
       type: IsarType.string,
     ),
     r'city': PropertySchema(
-      id: 2,
+      id: 5,
       name: r'city',
       type: IsarType.string,
     ),
     r'email': PropertySchema(
-      id: 3,
+      id: 6,
       name: r'email',
       type: IsarType.string,
     ),
     r'fax': PropertySchema(
-      id: 4,
+      id: 7,
       name: r'fax',
       type: IsarType.string,
     ),
     r'isDefault': PropertySchema(
-      id: 5,
+      id: 8,
       name: r'isDefault',
       type: IsarType.bool,
     ),
     r'logoPath': PropertySchema(
-      id: 6,
+      id: 9,
       name: r'logoPath',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 7,
+      id: 10,
       name: r'name',
       type: IsarType.string,
     ),
     r'npwp': PropertySchema(
-      id: 8,
+      id: 11,
       name: r'npwp',
       type: IsarType.string,
     ),
     r'phone': PropertySchema(
-      id: 9,
+      id: 12,
       name: r'phone',
       type: IsarType.string,
     ),
     r'postalCode': PropertySchema(
-      id: 10,
+      id: 13,
       name: r'postalCode',
       type: IsarType.string,
     ),
     r'province': PropertySchema(
-      id: 11,
+      id: 14,
       name: r'province',
       type: IsarType.string,
     ),
     r'slogan': PropertySchema(
-      id: 12,
+      id: 15,
       name: r'slogan',
       type: IsarType.string,
     ),
     r'website': PropertySchema(
-      id: 13,
+      id: 16,
       name: r'website',
       type: IsarType.string,
     ),
     r'whatsapp': PropertySchema(
-      id: 14,
+      id: 17,
       name: r'whatsapp',
       type: IsarType.string,
     )
@@ -114,7 +129,25 @@ int _companyEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
+    final value = object.accountName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.address;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.bankAccount;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.bankName;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -206,21 +239,24 @@ void _companySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.address);
-  writer.writeString(offsets[1], object.branchName);
-  writer.writeString(offsets[2], object.city);
-  writer.writeString(offsets[3], object.email);
-  writer.writeString(offsets[4], object.fax);
-  writer.writeBool(offsets[5], object.isDefault);
-  writer.writeString(offsets[6], object.logoPath);
-  writer.writeString(offsets[7], object.name);
-  writer.writeString(offsets[8], object.npwp);
-  writer.writeString(offsets[9], object.phone);
-  writer.writeString(offsets[10], object.postalCode);
-  writer.writeString(offsets[11], object.province);
-  writer.writeString(offsets[12], object.slogan);
-  writer.writeString(offsets[13], object.website);
-  writer.writeString(offsets[14], object.whatsapp);
+  writer.writeString(offsets[0], object.accountName);
+  writer.writeString(offsets[1], object.address);
+  writer.writeString(offsets[2], object.bankAccount);
+  writer.writeString(offsets[3], object.bankName);
+  writer.writeString(offsets[4], object.branchName);
+  writer.writeString(offsets[5], object.city);
+  writer.writeString(offsets[6], object.email);
+  writer.writeString(offsets[7], object.fax);
+  writer.writeBool(offsets[8], object.isDefault);
+  writer.writeString(offsets[9], object.logoPath);
+  writer.writeString(offsets[10], object.name);
+  writer.writeString(offsets[11], object.npwp);
+  writer.writeString(offsets[12], object.phone);
+  writer.writeString(offsets[13], object.postalCode);
+  writer.writeString(offsets[14], object.province);
+  writer.writeString(offsets[15], object.slogan);
+  writer.writeString(offsets[16], object.website);
+  writer.writeString(offsets[17], object.whatsapp);
 }
 
 Company _companyDeserialize(
@@ -230,22 +266,25 @@ Company _companyDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Company();
-  object.address = reader.readStringOrNull(offsets[0]);
-  object.branchName = reader.readStringOrNull(offsets[1]);
-  object.city = reader.readStringOrNull(offsets[2]);
-  object.email = reader.readStringOrNull(offsets[3]);
-  object.fax = reader.readStringOrNull(offsets[4]);
+  object.accountName = reader.readStringOrNull(offsets[0]);
+  object.address = reader.readStringOrNull(offsets[1]);
+  object.bankAccount = reader.readStringOrNull(offsets[2]);
+  object.bankName = reader.readStringOrNull(offsets[3]);
+  object.branchName = reader.readStringOrNull(offsets[4]);
+  object.city = reader.readStringOrNull(offsets[5]);
+  object.email = reader.readStringOrNull(offsets[6]);
+  object.fax = reader.readStringOrNull(offsets[7]);
   object.id = id;
-  object.isDefault = reader.readBool(offsets[5]);
-  object.logoPath = reader.readStringOrNull(offsets[6]);
-  object.name = reader.readStringOrNull(offsets[7]);
-  object.npwp = reader.readStringOrNull(offsets[8]);
-  object.phone = reader.readStringOrNull(offsets[9]);
-  object.postalCode = reader.readStringOrNull(offsets[10]);
-  object.province = reader.readStringOrNull(offsets[11]);
-  object.slogan = reader.readStringOrNull(offsets[12]);
-  object.website = reader.readStringOrNull(offsets[13]);
-  object.whatsapp = reader.readStringOrNull(offsets[14]);
+  object.isDefault = reader.readBool(offsets[8]);
+  object.logoPath = reader.readStringOrNull(offsets[9]);
+  object.name = reader.readStringOrNull(offsets[10]);
+  object.npwp = reader.readStringOrNull(offsets[11]);
+  object.phone = reader.readStringOrNull(offsets[12]);
+  object.postalCode = reader.readStringOrNull(offsets[13]);
+  object.province = reader.readStringOrNull(offsets[14]);
+  object.slogan = reader.readStringOrNull(offsets[15]);
+  object.website = reader.readStringOrNull(offsets[16]);
+  object.whatsapp = reader.readStringOrNull(offsets[17]);
   return object;
 }
 
@@ -267,13 +306,13 @@ P _companyDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readBool(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
       return (reader.readStringOrNull(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 9:
       return (reader.readStringOrNull(offset)) as P;
     case 10:
@@ -285,6 +324,12 @@ P _companyDeserializeProp<P>(
     case 13:
       return (reader.readStringOrNull(offset)) as P;
     case 14:
+      return (reader.readStringOrNull(offset)) as P;
+    case 15:
+      return (reader.readStringOrNull(offset)) as P;
+    case 16:
+      return (reader.readStringOrNull(offset)) as P;
+    case 17:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -380,6 +425,153 @@ extension CompanyQueryWhere on QueryBuilder<Company, Company, QWhereClause> {
 
 extension CompanyQueryFilter
     on QueryBuilder<Company, Company, QFilterCondition> {
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'accountName',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'accountName',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'accountName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'accountName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'accountName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'accountName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'accountName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'accountName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'accountName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'accountName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> accountNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'accountName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition>
+      accountNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'accountName',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Company, Company, QAfterFilterCondition> addressIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -521,6 +713,299 @@ extension CompanyQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'address',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'bankAccount',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'bankAccount',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bankAccount',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'bankAccount',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'bankAccount',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'bankAccount',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'bankAccount',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'bankAccount',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'bankAccount',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'bankAccount',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankAccountIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bankAccount',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition>
+      bankAccountIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'bankAccount',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'bankName',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'bankName',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bankName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'bankName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'bankName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'bankName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'bankName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'bankName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'bankName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'bankName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bankName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterFilterCondition> bankNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'bankName',
         value: '',
       ));
     });
@@ -2494,6 +2979,18 @@ extension CompanyQueryLinks
     on QueryBuilder<Company, Company, QFilterCondition> {}
 
 extension CompanyQuerySortBy on QueryBuilder<Company, Company, QSortBy> {
+  QueryBuilder<Company, Company, QAfterSortBy> sortByAccountName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'accountName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> sortByAccountNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'accountName', Sort.desc);
+    });
+  }
+
   QueryBuilder<Company, Company, QAfterSortBy> sortByAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'address', Sort.asc);
@@ -2503,6 +3000,30 @@ extension CompanyQuerySortBy on QueryBuilder<Company, Company, QSortBy> {
   QueryBuilder<Company, Company, QAfterSortBy> sortByAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'address', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> sortByBankAccount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bankAccount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> sortByBankAccountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bankAccount', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> sortByBankName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bankName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> sortByBankNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bankName', Sort.desc);
     });
   }
 
@@ -2677,6 +3198,18 @@ extension CompanyQuerySortBy on QueryBuilder<Company, Company, QSortBy> {
 
 extension CompanyQuerySortThenBy
     on QueryBuilder<Company, Company, QSortThenBy> {
+  QueryBuilder<Company, Company, QAfterSortBy> thenByAccountName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'accountName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> thenByAccountNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'accountName', Sort.desc);
+    });
+  }
+
   QueryBuilder<Company, Company, QAfterSortBy> thenByAddress() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'address', Sort.asc);
@@ -2686,6 +3219,30 @@ extension CompanyQuerySortThenBy
   QueryBuilder<Company, Company, QAfterSortBy> thenByAddressDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'address', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> thenByBankAccount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bankAccount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> thenByBankAccountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bankAccount', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> thenByBankName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bankName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Company, Company, QAfterSortBy> thenByBankNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bankName', Sort.desc);
     });
   }
 
@@ -2872,10 +3429,31 @@ extension CompanyQuerySortThenBy
 
 extension CompanyQueryWhereDistinct
     on QueryBuilder<Company, Company, QDistinct> {
+  QueryBuilder<Company, Company, QDistinct> distinctByAccountName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'accountName', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Company, Company, QDistinct> distinctByAddress(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'address', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Company, Company, QDistinct> distinctByBankAccount(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'bankAccount', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Company, Company, QDistinct> distinctByBankName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'bankName', caseSensitive: caseSensitive);
     });
   }
 
@@ -2985,9 +3563,27 @@ extension CompanyQueryProperty
     });
   }
 
+  QueryBuilder<Company, String?, QQueryOperations> accountNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'accountName');
+    });
+  }
+
   QueryBuilder<Company, String?, QQueryOperations> addressProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'address');
+    });
+  }
+
+  QueryBuilder<Company, String?, QQueryOperations> bankAccountProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'bankAccount');
+    });
+  }
+
+  QueryBuilder<Company, String?, QQueryOperations> bankNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'bankName');
     });
   }
 

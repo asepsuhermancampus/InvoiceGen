@@ -16,6 +16,7 @@ class _CompanyFormScreenState extends ConsumerState<CompanyFormScreen> {
   
   late TextEditingController _nameController;
   late TextEditingController _branchController;
+  late TextEditingController _sloganController;
   late TextEditingController _addressController;
   late TextEditingController _phoneController;
 
@@ -24,6 +25,7 @@ class _CompanyFormScreenState extends ConsumerState<CompanyFormScreen> {
     super.initState();
     _nameController = TextEditingController(text: widget.company?.name);
     _branchController = TextEditingController(text: widget.company?.branchName);
+    _sloganController = TextEditingController(text: widget.company?.slogan);
     _addressController = TextEditingController(text: widget.company?.address);
     _phoneController = TextEditingController(text: widget.company?.phone);
   }
@@ -32,6 +34,7 @@ class _CompanyFormScreenState extends ConsumerState<CompanyFormScreen> {
   void dispose() {
     _nameController.dispose();
     _branchController.dispose();
+    _sloganController.dispose();
     _addressController.dispose();
     _phoneController.dispose();
     super.dispose();
@@ -43,6 +46,7 @@ class _CompanyFormScreenState extends ConsumerState<CompanyFormScreen> {
       final newCompany = widget.company ?? Company();
       newCompany.name = _nameController.text;
       newCompany.branchName = _branchController.text;
+      newCompany.slogan = _sloganController.text;
       newCompany.address = _addressController.text;
       newCompany.phone = _phoneController.text;
       
@@ -70,11 +74,16 @@ class _CompanyFormScreenState extends ConsumerState<CompanyFormScreen> {
           child: Column(
             children: [
               TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Nama Perusahaan'),
-                validator: (val) => val != null && val.isEmpty ? 'Wajib diisi' : null,
-              ),
-              const SizedBox(height: 16),
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Nama Perusahaan *'),
+              validator: (val) => val == null || val.isEmpty ? 'Wajib diisi' : null,
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _sloganController,
+              decoration: const InputDecoration(labelText: 'Tagline/Slogan (Opsional)'),
+            ),
+            const SizedBox(height: 12),
               TextFormField(
                 controller: _branchController,
                 decoration: const InputDecoration(labelText: 'Cabang (Opsional)'),
