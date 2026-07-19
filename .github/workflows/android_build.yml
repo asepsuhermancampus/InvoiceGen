@@ -39,9 +39,9 @@ jobs:
 
       - name: Force all plugins to compileSdk 36
         run: |
-          find ~/.pub-cache/hosted/pub.dev/*/android/build.gradle -type f -exec sed -i 's/compileSdkVersion [0-9]*/compileSdkVersion 36/g' {} +
-          find ~/.pub-cache/hosted/pub.dev/*/android/build.gradle -type f -exec sed -i "s/compileSdk [0-9]*/compileSdk 36/g" {} +
-          find ~/.pub-cache/hosted/pub.dev/*/android/build.gradle -type f -exec sed -i "s/compileSdk = [0-9]*/compileSdk = 36/g" {} +
+          find ~/.pub-cache/hosted/pub.dev/*/android/build.gradle -type f -exec sed -i -E 's/compileSdkVersion [0-9]+/compileSdkVersion 36/g' {} +
+          find ~/.pub-cache/hosted/pub.dev/*/android/build.gradle -type f -exec sed -i -E 's/compileSdk = [0-9]+/compileSdk = 36/g' {} +
+          find ~/.pub-cache/hosted/pub.dev/*/android/build.gradle -type f -exec sed -i -E 's/compileSdk [0-9]+/compileSdk 36/g' {} +
 
       - name: Build APK
         run: flutter build apk --release -v
