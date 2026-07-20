@@ -25,7 +25,7 @@ void main() async {
     ..name = 'PT MAKMUR SENTOSA'
     ..slogan = 'Solusi IT Terbaik Anda'
     ..branchName = 'Cabang Utama'
-    ..address = 'Jl. Jend. Sudirman No. 1, Jakarta'
+    ..address = 'Jl. Jend. Sudirman No. 1, Gedung Cyber Lt. 24, Kawasan Bisnis Sudirman (SCBD), Kebayoran Baru, Jakarta Selatan, DKI Jakarta, 12190, Indonesia - Dekat halte TransJakarta Gelora Bung Karno'
     ..phone = '021-1234567';
 
   final customer = Customer()
@@ -34,37 +34,36 @@ void main() async {
     ..address = 'Jl. Merdeka No. 45, Bandung'
     ..phone = '081234567890';
 
-  final item1 = InvoiceItem()
-    ..itemName = 'Pembuatan Sistem'
-    ..qty = 1
-    ..sellingPrice = 15000000;
-
-  final item2 = InvoiceItem()
-    ..itemName = 'Maintenance Server'
-    ..qty = 3
-    ..sellingPrice = 1500000;
+  final items = List.generate(20, (i) {
+    return InvoiceItem()
+      ..itemName = 'Barang / Jasa No. ${i + 1}'
+      ..specification = 'Spesifikasi detail untuk item nomor ${i + 1}'
+      ..qty = (i + 1).toDouble()
+      ..unit = 'Unit'
+      ..sellingPrice = 500000 + (i * 100000);
+  });
 
   final invoice = Invoice()
-    ..invoiceNumber = 'INV-2026-008'
+    ..invoiceNumber = 'INV-2026-020'
     ..date = DateTime.now()
     ..documentType = 'INVOICE'
     ..introText =
         'Terima kasih atas kepercayaan Anda menggunakan layanan kami. '
-        'Berikut adalah rincian tagihan:'
-    ..terbilang = 'Sembilan Belas Juta Lima Ratus Ribu Rupiah'
+        'Berikut adalah rincian tagihan untuk pengadaan barang dan jasa.'
+    ..terbilang = 'Lima Belas Juta Lima Ratus Ribu Rupiah'
     ..notes =
         'Pembayaran ditransfer ke rekening BCA 1234567890 a/n PT Makmur Sentosa'
     ..paymentTerms = 'Termin 1 (50%) - 14 Hari setelah invoice diterima'
     ..signatorName = 'Andi Susanto'
-    ..subtotal = 19500000
+    ..subtotal = 15500000
     ..discountTotal = 0
     ..taxRate = 11
-    ..taxTotal = 2145000
+    ..taxTotal = 1705000
     ..pphRate = 0
-    ..grandTotal = 21645000
+    ..grandTotal = 17205000
     ..hideTax = false
     ..hideSubtotal = false
-    ..items = [item1, item2];
+    ..items = items;
 
   invoice.company.value = company;
   invoice.customer.value = customer;
@@ -75,9 +74,9 @@ void main() async {
 
   // ─── Generate Semua Template ──────────────────────────────────────────────
   final templateNames = {
-    1: 'classic_professional',
-    2: 'minimalist_modern',
-    3: 'corporate_bold',
+    1: 'classic',
+    2: 'modern',
+    3: 'corporate',
     4: 'clean_elegant',
   };
 
@@ -89,9 +88,10 @@ void main() async {
         invoice: invoice,
         templateIndex: index,
       );
-      final file = File('$outputDir/template_${index}_${name}_v7.pdf');
+      final absDir = Directory(outputDir).absolute.path;
+      final file = File('$absDir/template_${index}_${name}_v35.pdf');
       file.writeAsBytesSync(pdfBytes);
-      print('✅  Template $index ($name) → ${file.path}');
+      print('✅  Template $index ($name) → ${file.absolute.path}');
     } catch (e) {
       print('❌  Template $index ($name) gagal: $e');
     }

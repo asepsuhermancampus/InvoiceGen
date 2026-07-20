@@ -150,16 +150,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         await Navigator.push(context, MaterialPageRoute(builder: (_) => const InvoiceFormScreen()));
                         _loadStats();
                       }),
-                      _actionCard(context, Icons.list_alt, 'Daftar\nInvoice', const Color(0xFF1565C0), () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const InvoiceListScreen()));
-                      }),
                       _actionCard(context, Icons.business, 'Daftar\nCompany', const Color(0xFF00695C), () async {
                         await Navigator.push(context, MaterialPageRoute(builder: (_) => const CompanyListScreen()));
                         _loadStats();
                       }),
-                      _actionCard(context, Icons.people, 'Daftar\nCustomer', const Color(0xFFE65100), () async {
+                      _actionCard(context, Icons.people, 'Daftar\nPIC', const Color(0xFFE65100), () async {
                         await Navigator.push(context, MaterialPageRoute(builder: (_) => const CustomerListScreen()));
                         _loadStats();
+                      }),
+                      _actionCard(context, Icons.list_alt, 'Daftar\nInvoice', const Color(0xFF1565C0), () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const InvoiceListScreen()));
                       }),
                       _actionCard(context, Icons.design_services, 'Template\nPDF', const Color(0xFF6A1B9A), () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) => const TemplateListScreen()));

@@ -97,9 +97,9 @@ class _InvoicePreviewScreenState extends State<InvoicePreviewScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               children: [
-                _templateChip(0, 'Classic Navy'),
-                _templateChip(1, 'Modern Teal'),
-                _templateChip(2, 'Corporate Orange'),
+                _templateChip(0, 'Classic'),
+                _templateChip(1, 'Modern'),
+                _templateChip(2, 'Corporate'),
                 _templateChip(3, 'Clean Elegant'),
               ],
             ),

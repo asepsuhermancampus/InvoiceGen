@@ -18,9 +18,9 @@ class _TemplateListScreenState extends ConsumerState<TemplateListScreen> {
 
   // Built-in template definitions
   static const _builtins = [
-    {'name': 'Classic Navy', 'desc': 'Header navy, tabel profesional, cocok untuk semua industri', 'color': Color(0xFF1A237E), 'icon': Icons.business_center},
-    {'name': 'Modern Teal', 'desc': 'Tampilan minimalis dengan aksen teal, kesan modern', 'color': Color(0xFF00695C), 'icon': Icons.design_services},
-    {'name': 'Corporate Orange', 'desc': 'Bold orange header, kesan energik dan korporat', 'color': Color(0xFFE65100), 'icon': Icons.corporate_fare},
+    {'name': 'Classic', 'desc': 'Header navy, tabel profesional, cocok untuk semua industri', 'color': Color(0xFF1A237E), 'icon': Icons.business_center},
+    {'name': 'Modern', 'desc': 'Tampilan minimalis dengan aksen teal, kesan modern', 'color': Color(0xFF00695C), 'icon': Icons.design_services},
+    {'name': 'Corporate', 'desc': 'Bold header, kesan elegan dan korporat', 'color': Color(0xFF546E7A), 'icon': Icons.corporate_fare},
     {'name': 'Clean Elegant', 'desc': 'Garis tipis, tipografi besar, sangat elegan', 'color': Color(0xFF424242), 'icon': Icons.auto_awesome},
   ];
 

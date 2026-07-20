@@ -43,6 +43,22 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   double _taxRate = 11.0;
   double _pphRate = 0.0;
   
+  // Teks Pembuka
+  static const String _kCustomIntro = '__custom__';
+  String _selectedIntroKey = '';
+  static final Map<String, String> _introTemplates = {
+    'Penawaran Harga': 'Bersama dengan ini kami sampaikan penawaran harga untuk kebutuhan Anda. '
+        'Kami berharap penawaran ini dapat memenuhi harapan Anda.',
+    'Invoice': 'Berikut kami sampaikan tagihan atas pekerjaan/barang yang telah diselesaikan/dikirimkan. '
+        'Mohon pembayaran dapat dilakukan sesuai dengan syarat pembayaran yang tercantum.',
+    'Quotation': 'Thank you for the opportunity to quote. Please find our price quotation as follows. '
+        'We hope to be of service to you.',
+    'Proforma Invoice': 'Berikut kami sampaikan proforma invoice sebagai dasar pembayaran di muka '
+        'sebelum pengiriman barang/jasa dilakukan.',
+    'Kosong (Tanpa Teks)': '',
+    'Custom': _kCustomIntro,
+  };
+
   // Totals
   double _subtotal = 0;
   double _discountTotal = 0;
@@ -57,6 +73,21 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
     _introTextController = TextEditingController(text: widget.invoice?.introText ?? '');
     _paymentTermsController = TextEditingController(text: widget.invoice?.paymentTerms ?? '');
     _signatorNameController = TextEditingController(text: widget.invoice?.signatorName ?? '');
+    
+    // Set initial dropdown selection for intro text
+    final existingIntro = widget.invoice?.introText ?? '';
+    if (existingIntro.isEmpty) {
+      _selectedIntroKey = 'Kosong (Tanpa Teks)';
+    } else {
+      final matchedKey = _introTemplates.entries
+          .where((e) => e.value == existingIntro && e.value != _kCustomIntro)
+          .map((e) => e.key)
+          .firstOrNull;
+      _selectedIntroKey = matchedKey ?? 'Custom';
+      if (_selectedIntroKey == 'Custom') {
+        _introTextController.text = existingIntro;
+      }
+    }
     
     if (widget.invoice != null) {
       _invoiceNumberController = TextEditingController(text: widget.invoice!.invoiceNumber ?? '');
@@ -122,15 +153,53 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   }
 
   void _addItem() {
-    // Show a dialog to add an item
-    showDialog(context: context, builder: (_) => _AddItemDialog(
-      onAdd: (item) {
+    showDialog(context: context, builder: (_) => _ItemDialog(
+      onSave: (item) {
         setState(() {
           _items.add(item);
           _recalculateTotals();
         });
       },
     ));
+  }
+
+  void _editItem(int index) {
+    showDialog(
+      context: context,
+      builder: (_) => _ItemDialog(
+        existing: _items[index],
+        onSave: (updatedItem) {
+          setState(() {
+            _items[index] = updatedItem;
+            _recalculateTotals();
+          });
+        },
+      ),
+    );
+  }
+
+  void _deleteItem(int index) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Hapus Item?'),
+        content: Text('Apakah Anda yakin ingin menghapus "${_items[index].itemName}"?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Batal')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () {
+              setState(() {
+                _items.removeAt(index);
+                _recalculateTotals();
+              });
+              Navigator.pop(ctx);
+            },
+            child: const Text('Hapus', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
   }
 
   void _save() async {
@@ -151,7 +220,8 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
       newInvoice.taxRate = _taxRate;
       newInvoice.pphRate = _pphRate;
       newInvoice.notes = _notesController.text;
-      newInvoice.introText = _introTextController.text;
+      // Save the intro text from controller (which is always kept in sync)
+      newInvoice.introText = (_selectedIntroKey == 'Kosong (Tanpa Teks)') ? '' : _introTextController.text;
       newInvoice.paymentTerms = _paymentTermsController.text;
       newInvoice.signatorName = _signatorNameController.text;
       newInvoice.hideSubtotal = _hideSubtotal;
@@ -248,16 +318,40 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            
-            TextFormField(
-              controller: _introTextController,
+
+            // ── Teks Pembuka ───────────────────────────────────────
+            DropdownButtonFormField<String>(
+              value: _selectedIntroKey.isEmpty ? null : _selectedIntroKey,
               decoration: const InputDecoration(
-                labelText: 'Teks Pembuka (Opsional)', 
-                hintText: 'Cth: Dengan Hormat,\nBersama dengan ini kami berikan penawaran harga sebagai berikut :',
-                alignLabelWithHint: true,
+                labelText: 'Teks Pembuka',
+                prefixIcon: Icon(Icons.short_text),
               ),
-              maxLines: 3,
+              items: _introTemplates.keys
+                  .map((key) => DropdownMenuItem(value: key, child: Text(key)))
+                  .toList(),
+              onChanged: (val) {
+                if (val == null) return;
+                setState(() {
+                  _selectedIntroKey = val;
+                  if (val != 'Custom') {
+                    final tplValue = _introTemplates[val] ?? '';
+                    _introTextController.text = tplValue == _kCustomIntro ? '' : tplValue;
+                  }
+                });
+              },
             ),
+            if (_selectedIntroKey == 'Custom') ...[
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _introTextController,
+                decoration: const InputDecoration(
+                  labelText: 'Teks Pembuka (Custom)',
+                  hintText: 'Tulis teks pembuka Anda di sini...',
+                  alignLabelWithHint: true,
+                ),
+                maxLines: 4,
+              ),
+            ],
             const SizedBox(height: 16),
             
             // Items Section
@@ -273,15 +367,46 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
               ],
             ),
             const Divider(),
-            ..._items.map((item) => ListTile(
-              title: Text(item.itemName ?? ''),
-              subtitle: Text('${item.qty} x ${currencyFormat.format(item.sellingPrice)}'),
-              trailing: Text(currencyFormat.format((item.qty ?? 0) * (item.sellingPrice ?? 0))),
-            )),
             if (_items.isEmpty)
               const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text('Belum ada item ditambahkan.'),
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Center(child: Text('Belum ada item ditambahkan.')),
+              )
+            else
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _items.length,
+                separatorBuilder: (_, __) => const Divider(height: 1),
+                itemBuilder: (context, index) {
+                  final item = _items[index];
+                  final total = (item.qty ?? 0) * (item.sellingPrice ?? 0);
+                  final qtyDisplay = (item.qty ?? 0).toInt();
+                  return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+                    title: Text(item.itemName ?? '', style: const TextStyle(fontWeight: FontWeight.w600)),
+                    subtitle: Text('$qtyDisplay ${item.unit ?? ''} x ${currencyFormat.format(item.sellingPrice)}',
+                        style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(currencyFormat.format(total),
+                            style: const TextStyle(fontWeight: FontWeight.w600)),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(Icons.edit_outlined, size: 20),
+                          tooltip: 'Edit Item',
+                          onPressed: () => _editItem(index),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline, size: 20, color: Colors.redAccent),
+                          tooltip: 'Hapus Item',
+                          onPressed: () => _deleteItem(index),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
               
             const Divider(),
@@ -408,57 +533,102 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   }
 }
 
-class _AddItemDialog extends StatefulWidget {
-  final Function(InvoiceItem) onAdd;
-  const _AddItemDialog({required this.onAdd});
+class _ItemDialog extends StatefulWidget {
+  final InvoiceItem? existing;
+  final Function(InvoiceItem) onSave;
+  const _ItemDialog({this.existing, required this.onSave});
 
   @override
-  State<_AddItemDialog> createState() => _AddItemDialogState();
+  State<_ItemDialog> createState() => _ItemDialogState();
 }
 
-class _AddItemDialogState extends State<_AddItemDialog> {
-  final _nameCtrl = TextEditingController();
-  final _qtyCtrl = TextEditingController(text: '1');
-  final _costCtrl = TextEditingController(text: '0');
-  final _markupCtrl = TextEditingController(text: '0');
-  final _sellingCtrl = TextEditingController(text: '0');
+class _ItemDialogState extends State<_ItemDialog> {
+  late TextEditingController _nameCtrl;
+  late TextEditingController _specCtrl;
+  late TextEditingController _qtyCtrl;
+  late TextEditingController _unitCtrl;
+  late TextEditingController _costCtrl;
+  late TextEditingController _markupCtrl;
+  late TextEditingController _sellingCtrl;
+
+  bool get _isEdit => widget.existing != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final e = widget.existing;
+    _nameCtrl = TextEditingController(text: e?.itemName ?? '');
+    _specCtrl = TextEditingController(text: e?.specification ?? '');
+    _qtyCtrl = TextEditingController(text: e != null ? (e.qty ?? 1).toInt().toString() : '1');
+    _unitCtrl = TextEditingController(text: e?.unit ?? '');
+    _costCtrl = TextEditingController(text: e != null ? (e.costPrice ?? 0).toStringAsFixed(0) : '0');
+    _markupCtrl = TextEditingController(text: e != null ? (e.markupPercentage ?? 0).toStringAsFixed(0) : '0');
+    _sellingCtrl = TextEditingController(text: e != null ? (e.sellingPrice ?? 0).toStringAsFixed(0) : '0');
+  }
+
+  @override
+  void dispose() {
+    _nameCtrl.dispose(); _specCtrl.dispose(); _qtyCtrl.dispose();
+    _unitCtrl.dispose(); _costCtrl.dispose(); _markupCtrl.dispose();
+    _sellingCtrl.dispose();
+    super.dispose();
+  }
 
   void _calculateSelling() {
     double cost = double.tryParse(_costCtrl.text) ?? 0;
     double markup = double.tryParse(_markupCtrl.text) ?? 0;
     double selling = cost + (cost * markup / 100);
-    _sellingCtrl.text = selling.toStringAsFixed(0);
+    setState(() => _sellingCtrl.text = selling.toStringAsFixed(0));
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Tambah Item'),
+      title: Text(_isEdit ? 'Edit Item' : 'Tambah Item'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(controller: _nameCtrl, decoration: const InputDecoration(labelText: 'Nama Barang')),
             const SizedBox(height: 8),
-            TextField(controller: _qtyCtrl, decoration: const InputDecoration(labelText: 'Qty'), keyboardType: TextInputType.number),
+            TextField(controller: _specCtrl, decoration: const InputDecoration(labelText: 'Spesifikasi (Opsional)')),
+            const SizedBox(height: 8),
+            Row(children: [
+              Expanded(
+                flex: 2,
+                child: TextField(
+                  controller: _qtyCtrl,
+                  decoration: const InputDecoration(labelText: 'Qty'),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                flex: 1,
+                child: TextField(
+                  controller: _unitCtrl,
+                  decoration: const InputDecoration(labelText: 'Satuan'),
+                ),
+              ),
+            ]),
             const SizedBox(height: 8),
             TextField(
-              controller: _costCtrl, 
-              decoration: const InputDecoration(labelText: 'Harga Modal'), 
+              controller: _costCtrl,
+              decoration: const InputDecoration(labelText: 'Harga Modal'),
               keyboardType: TextInputType.number,
               onChanged: (_) => _calculateSelling(),
             ),
             const SizedBox(height: 8),
             TextField(
-              controller: _markupCtrl, 
-              decoration: const InputDecoration(labelText: 'Markup (%)'), 
+              controller: _markupCtrl,
+              decoration: const InputDecoration(labelText: 'Markup (%)'),
               keyboardType: TextInputType.number,
               onChanged: (_) => _calculateSelling(),
             ),
             const SizedBox(height: 8),
             TextField(
-              controller: _sellingCtrl, 
-              decoration: const InputDecoration(labelText: 'Harga Jual'), 
+              controller: _sellingCtrl,
+              decoration: const InputDecoration(labelText: 'Harga Jual'),
               keyboardType: TextInputType.number,
             ),
           ],
@@ -468,17 +638,19 @@ class _AddItemDialogState extends State<_AddItemDialog> {
         TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
         ElevatedButton(
           onPressed: () {
-            final item = InvoiceItem()
+            final item = (widget.existing ?? InvoiceItem())
               ..itemName = _nameCtrl.text
+              ..specification = _specCtrl.text
               ..qty = double.tryParse(_qtyCtrl.text) ?? 1
+              ..unit = _unitCtrl.text
               ..costPrice = double.tryParse(_costCtrl.text) ?? 0
               ..markupPercentage = double.tryParse(_markupCtrl.text) ?? 0
               ..sellingPrice = double.tryParse(_sellingCtrl.text) ?? 0;
-            widget.onAdd(item);
+            widget.onSave(item);
             Navigator.pop(context);
           },
-          child: const Text('Tambah'),
-        )
+          child: Text(_isEdit ? 'Simpan' : 'Tambah'),
+        ),
       ],
     );
   }
