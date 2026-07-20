@@ -53,7 +53,7 @@ class _TemplateBuilderScreenState extends State<TemplateBuilderScreen> {
             width: 260,
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
-              boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black12, offset: const Offset(2, 0))],
+              boxShadow: const [BoxShadow(blurRadius: 4, color: Colors.black12, offset: Offset(2, 0))],
             ),
             child: Column(
               children: [
@@ -94,7 +94,7 @@ class _TemplateBuilderScreenState extends State<TemplateBuilderScreen> {
                 child: Container(
                   width: _layout.pageWidth,
                   height: _layout.pageHeight,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     boxShadow: [BoxShadow(blurRadius: 12, color: Colors.black26)],
                   ),

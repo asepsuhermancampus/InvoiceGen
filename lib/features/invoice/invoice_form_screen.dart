@@ -398,7 +398,7 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
           ...items.map((c) => DropdownMenuItem(value: c, child: Text(c.name ?? ''))),
         ];
         return DropdownButtonFormField<Customer>(
-          value: _selectedCustomer,
+          initialValue: _selectedCustomer,
           decoration: const InputDecoration(labelText: 'Pilih Customer (Opsional)'),
           items: dropdownItems,
           onChanged: (val) => setState(() => _selectedCustomer = val),

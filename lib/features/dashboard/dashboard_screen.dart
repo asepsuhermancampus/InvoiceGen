@@ -69,12 +69,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               width: 32, height: 32,
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(Icons.receipt_long, color: Colors.white, size: 18),
             ),
-            const SizedBox(width: 10),
-            const Text('Invoice Generator', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(width: 12),
+            const Text('Inv Gen', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: -0.5)),
           ],
         ),
         actions: [
@@ -139,29 +139,29 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   Text('Aksi Cepat', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 12),
                   GridView.count(
-                    crossAxisCount: 2,
+                    crossAxisCount: 3,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
-                    childAspectRatio: 2.5,
+                    childAspectRatio: 1.1,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      _actionCard(context, Icons.add_circle_outline, 'Buat Invoice', theme.colorScheme.primary, () async {
+                      _actionCard(context, Icons.add_circle_outline, 'Buat\nInvoice', theme.colorScheme.primary, () async {
                         await Navigator.push(context, MaterialPageRoute(builder: (_) => const InvoiceFormScreen()));
                         _loadStats();
                       }),
-                      _actionCard(context, Icons.list_alt, 'Daftar Invoice', const Color(0xFF1565C0), () {
+                      _actionCard(context, Icons.list_alt, 'Daftar\nInvoice', const Color(0xFF1565C0), () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) => const InvoiceListScreen()));
                       }),
-                      _actionCard(context, Icons.business, 'Daftar Company', const Color(0xFF00695C), () async {
+                      _actionCard(context, Icons.business, 'Daftar\nCompany', const Color(0xFF00695C), () async {
                         await Navigator.push(context, MaterialPageRoute(builder: (_) => const CompanyListScreen()));
                         _loadStats();
                       }),
-                      _actionCard(context, Icons.people, 'Daftar Customer', const Color(0xFFE65100), () async {
+                      _actionCard(context, Icons.people, 'Daftar\nCustomer', const Color(0xFFE65100), () async {
                         await Navigator.push(context, MaterialPageRoute(builder: (_) => const CustomerListScreen()));
                         _loadStats();
                       }),
-                      _actionCard(context, Icons.design_services, 'Template', const Color(0xFF6A1B9A), () {
+                      _actionCard(context, Icons.design_services, 'Template\nPDF', const Color(0xFF6A1B9A), () {
                         Navigator.push(context, MaterialPageRoute(builder: (_) => const TemplateListScreen()));
                       }),
                       _actionCard(context, Icons.settings, 'Pengaturan', const Color(0xFF37474F), () async {
@@ -234,22 +234,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _actionCard(BuildContext ctx, IconData icon, String label, Color color, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Card(
-        child: Row(
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 48,
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color,
-                borderRadius: const BorderRadius.horizontal(left: Radius.circular(12)),
+                color: color.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: Colors.white, size: 22),
+              child: Icon(icon, color: color, size: 28),
             ),
-            const SizedBox(width: 10),
-            Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13))),
+            const SizedBox(height: 12),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, height: 1.2),
+            ),
           ],
         ),
       ),
