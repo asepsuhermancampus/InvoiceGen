@@ -518,15 +518,19 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
       future: ref.read(customerRepositoryProvider).getAllCustomers(),
       builder: (context, snapshot) {
         final items = snapshot.data ?? [];
-        final dropdownItems = [
-          const DropdownMenuItem<Customer>(value: null, child: Text('Tidak Ada (Kosong)')),
-          ...items.map((c) => DropdownMenuItem(value: c, child: Text(c.name ?? ''))),
-        ];
-        return DropdownButtonFormField<Customer>(
-          initialValue: _selectedCustomer,
-          decoration: const InputDecoration(labelText: 'Pilih Customer (Opsional)'),
-          items: dropdownItems,
-          onChanged: (val) => setState(() => _selectedCustomer = val),
+        return DropdownMenu<Customer?>(
+          initialSelection: _selectedCustomer,
+          label: const Text('Cari / Pilih Customer (Opsional)'),
+          expandedInsets: EdgeInsets.zero,
+          enableFilter: true,
+          requestFocusOnTap: true,
+          onSelected: (val) {
+            setState(() => _selectedCustomer = val);
+          },
+          dropdownMenuEntries: [
+            const DropdownMenuEntry<Customer?>(value: null, label: 'Tidak Ada (Kosong)'),
+            ...items.map((c) => DropdownMenuEntry<Customer?>(value: c, label: c.name ?? '')),
+          ],
         );
       }
     );
@@ -543,6 +547,11 @@ class _ItemDialog extends StatefulWidget {
 }
 
 class _ItemDialogState extends State<_ItemDialog> {
+  static const _satuanList = [
+    'Box', 'Bulan', 'Cm', 'Gram', 'Hari', 'Jam', 'Kg', 'Lot', 'Ls', 'Meter', 
+    'Ons', 'Pack', 'Pcs', 'Roll', 'Sak', 'Set', 'Tahun', 'Unit'
+  ];
+
   late TextEditingController _nameCtrl;
   late TextEditingController _specCtrl;
   late TextEditingController _qtyCtrl;
@@ -585,33 +594,39 @@ class _ItemDialogState extends State<_ItemDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(_isEdit ? 'Edit Item' : 'Tambah Item'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: _nameCtrl, decoration: const InputDecoration(labelText: 'Nama Barang')),
-            const SizedBox(height: 8),
-            TextField(controller: _specCtrl, decoration: const InputDecoration(labelText: 'Spesifikasi (Opsional)')),
-            const SizedBox(height: 8),
-            Row(children: [
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  controller: _qtyCtrl,
+      content: SizedBox(
+        width: 600,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: _nameCtrl, decoration: const InputDecoration(labelText: 'Nama Barang')),
+              const SizedBox(height: 8),
+              TextField(controller: _specCtrl, decoration: const InputDecoration(labelText: 'Spesifikasi (Opsional)')),
+              const SizedBox(height: 16),
+              Row(children: [
+                Expanded(
+                  flex: 1,
+                  child: TextField(
+                    controller: _qtyCtrl,
                   decoration: const InputDecoration(labelText: 'Qty'),
-                  keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.number,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                flex: 1,
-                child: TextField(
-                  controller: _unitCtrl,
-                  decoration: const InputDecoration(labelText: 'Satuan'),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 1,
+                  child: DropdownMenu<String>(
+                    controller: _unitCtrl,
+                    label: const Text('Satuan'),
+                    enableFilter: true,
+                    requestFocusOnTap: true,
+                    expandedInsets: EdgeInsets.zero,
+                    dropdownMenuEntries: _satuanList.map((s) => DropdownMenuEntry(value: s, label: s)).toList(),
+                  ),
                 ),
-              ),
-            ]),
-            const SizedBox(height: 8),
+              ]),
+              const SizedBox(height: 16),
             TextField(
               controller: _costCtrl,
               decoration: const InputDecoration(labelText: 'Harga Modal'),

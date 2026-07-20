@@ -268,7 +268,7 @@ class PdfBuilder {
             mainAxisAlignment: pw.MainAxisAlignment.end,
             children: [
               pw.SizedBox(
-                  width: 220,
+                  width: 250,
                   child: _buildSummary(inv, currency,
                       accentColor: PdfColors2.elegantDark)),
             ]),
@@ -403,7 +403,7 @@ class PdfBuilder {
             mainAxisAlignment: pw.MainAxisAlignment.end,
             children: [
               pw.SizedBox(
-                  width: 220,
+                  width: 250,
                   child: _buildSummary(inv, currency,
                       accentColor: PdfColors2.elegantDark)),
             ])),
@@ -533,7 +533,7 @@ class PdfBuilder {
             mainAxisAlignment: pw.MainAxisAlignment.end,
             children: [
               pw.SizedBox(
-                  width: 220,
+                  width: 250,
                   child: _buildSummary(inv, currency,
                       accentColor: PdfColors2.elegantDark, bordered: false)),
             ]),
@@ -721,18 +721,19 @@ class PdfBuilder {
       columnWidths: const {
         0: pw.FixedColumnWidth(30),
         1: pw.FlexColumnWidth(3),
-        2: pw.FixedColumnWidth(50),
-        3: pw.FixedColumnWidth(80),
-        4: pw.FixedColumnWidth(90),
+        2: pw.FixedColumnWidth(40),
+        3: pw.FixedColumnWidth(40),
+        4: pw.FixedColumnWidth(80),
+        5: pw.FixedColumnWidth(90),
       },
       children: [
         pw.TableRow(
           decoration: pw.BoxDecoration(color: headerBg),
-          children: ['No', 'Nama Barang', 'Qty', 'Harga Satuan', 'Total']
+          children: ['No', 'Nama Barang', 'Qty', 'Satuan', 'Harga Satuan', 'Total']
               .map((h) => pw.Padding(
                     padding: const pw.EdgeInsets.all(6),
                     child: pw.Text(h,
-                        textAlign: (h == 'No' || h == 'Qty')
+                        textAlign: (h == 'No' || h == 'Qty' || h == 'Satuan')
                             ? pw.TextAlign.center
                             : pw.TextAlign.left,
                         style: pw.TextStyle(
@@ -775,8 +776,13 @@ class PdfBuilder {
               pw.Padding(
                   padding: const pw.EdgeInsets.all(5),
                   child: pw.Text(
-                      '${(item.qty ?? 0).toInt()} ${item.unit ?? ''}'
-                          .trim(),
+                      '${(item.qty ?? 0).toInt()}',
+                      textAlign: pw.TextAlign.center,
+                      style: const pw.TextStyle(fontSize: 8))),
+              pw.Padding(
+                  padding: const pw.EdgeInsets.all(5),
+                  child: pw.Text(
+                      item.unit ?? '',
                       textAlign: pw.TextAlign.center,
                       style: const pw.TextStyle(fontSize: 8))),
               pw.Padding(
@@ -828,7 +834,7 @@ class PdfBuilder {
     return pw.Table(
       border: border,
       columnWidths: const {
-        0: pw.FixedColumnWidth(130),
+        0: pw.FixedColumnWidth(160),
         1: pw.FixedColumnWidth(90),
       },
       children: [

@@ -71,6 +71,17 @@ class _InvoiceListScreenState extends ConsumerState<InvoiceListScreen> {
     _load();
   }
 
+  Future<void> _updateStatus(Invoice inv, String status) async {
+    await ref.read(invoiceRepositoryProvider).updateInvoiceStatus(inv.id, status);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Status diubah ke $status!'), backgroundColor: Colors.green),
+      );
+    }
+    _load();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -211,6 +222,25 @@ class _InvoiceListScreenState extends ConsumerState<InvoiceListScreen> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (inv.status == 'Draft' || inv.status == null)
+                        InkWell(
+                          borderRadius: BorderRadius.circular(4),
+                          onTap: () => _updateStatus(inv, 'Sent'),
+                          child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.send, size: 16, color: Colors.blueGrey)),
+                        ),
+                      if (inv.status == 'Sent')
+                        InkWell(
+                          borderRadius: BorderRadius.circular(4),
+                          onTap: () => _updateStatus(inv, 'Paid'),
+                          child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.check_circle_outline, size: 16, color: Colors.green)),
+                        ),
+                      if (inv.status == 'Paid')
+                        InkWell(
+                          borderRadius: BorderRadius.circular(4),
+                          onTap: () => _updateStatus(inv, 'Draft'),
+                          child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.undo, size: 16, color: Colors.grey)),
+                        ),
+                      const SizedBox(width: 4),
                       InkWell(
                         borderRadius: BorderRadius.circular(4),
                         onTap: () => _duplicate(inv),

@@ -32,7 +32,7 @@ class InvoiceRepository {
     if (original == null) return null;
 
     final duplicate = Invoice()
-      ..invoiceNumber = '${original.invoiceNumber}-COPY'
+      ..invoiceNumber = '${original.invoiceNumber}-Clone'
       ..date = DateTime.now()
       ..documentType = original.documentType
       ..currency = original.currency
@@ -66,5 +66,21 @@ class InvoiceRepository {
     });
 
     return duplicate;
+  }
+  Future<void> updateInvoiceStatus(int id, String newStatus) async {
+    final original = await _isar.invoices.get(id);
+    if (original == null) return;
+    
+    original.status = newStatus;
+    
+    await _isar.writeTxn(() async {
+      await _isar.invoices.put(original);
+      original.company.value = original.company.value;
+      original.customer.value = original.customer.value;
+      original.template.value = original.template.value;
+      await original.company.save();
+      await original.customer.save();
+      await original.template.save();
+    });
   }
 }
