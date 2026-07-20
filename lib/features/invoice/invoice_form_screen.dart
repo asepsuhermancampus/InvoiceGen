@@ -321,7 +321,7 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
 
             // ── Teks Pembuka ───────────────────────────────────────
             DropdownButtonFormField<String>(
-              value: _selectedIntroKey.isEmpty ? null : _selectedIntroKey,
+              initialValue: _selectedIntroKey.isEmpty ? null : _selectedIntroKey,
               decoration: const InputDecoration(
                 labelText: 'Teks Pembuka',
                 prefixIcon: Icon(Icons.short_text),
