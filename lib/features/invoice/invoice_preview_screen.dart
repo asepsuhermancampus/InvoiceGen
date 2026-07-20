@@ -16,7 +16,7 @@ class InvoicePreviewScreen extends StatefulWidget {
   const InvoicePreviewScreen({
     super.key,
     required this.invoice,
-    this.templateIndex = 0,
+    this.templateIndex = 1,
   });
 
   @override
@@ -97,10 +97,10 @@ class _InvoicePreviewScreenState extends State<InvoicePreviewScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               children: [
-                _templateChip(0, 'Classic'),
-                _templateChip(1, 'Modern'),
-                _templateChip(2, 'Corporate'),
-                _templateChip(3, 'Clean Elegant'),
+                _templateChip(1, 'Classic'),
+                _templateChip(2, 'Modern'),
+                _templateChip(3, 'Corporate'),
+                _templateChip(4, 'Clean Elegant'),
               ],
             ),
           ),
