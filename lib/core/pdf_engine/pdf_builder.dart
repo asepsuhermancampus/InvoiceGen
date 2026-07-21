@@ -124,7 +124,7 @@ class PdfBuilder {
           mainAxisAlignment: pw.MainAxisAlignment.end,
           children: [
             pw.SizedBox(
-              width: 220,
+              width: 270,
               child: _buildSummary(inv, currency,
                   accentColor: PdfColors2.elegantDark),
             ),
@@ -267,7 +267,7 @@ class PdfBuilder {
             mainAxisAlignment: pw.MainAxisAlignment.end,
             children: [
               pw.SizedBox(
-                  width: 250,
+                  width: 270,
                   child: _buildSummary(inv, currency,
                       accentColor: PdfColors2.elegantDark)),
             ]),
@@ -401,7 +401,7 @@ class PdfBuilder {
             mainAxisAlignment: pw.MainAxisAlignment.end,
             children: [
               pw.SizedBox(
-                  width: 250,
+                  width: 270,
                   child: _buildSummary(inv, currency,
                       accentColor: PdfColors2.elegantDark)),
             ])),
@@ -530,7 +530,7 @@ class PdfBuilder {
             mainAxisAlignment: pw.MainAxisAlignment.end,
             children: [
               pw.SizedBox(
-                  width: 250,
+                  width: 270,
                   child: _buildSummary(inv, currency,
                       accentColor: PdfColors2.elegantDark, bordered: false)),
             ]),
@@ -611,30 +611,51 @@ class PdfBuilder {
 
   // ─── Shared: Kepada Details ───────────────────────────────────────────────
   static pw.Widget _buildKepadaDetails(Invoice inv, Customer cu) {
-    return pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.Text((cu.companyName ?? '').isNotEmpty ? cu.companyName! : (cu.name ?? '-'),
-            style: pw.TextStyle(
-                fontSize: 10,
-                fontWeight: pw.FontWeight.bold,
-                color: PdfColors2.textDark)),
-        pw.SizedBox(height: 2),
-        if ((inv.attn ?? '').isNotEmpty) ...[
-          pw.Text('U.P.: ${inv.attn}',
-              style: const pw.TextStyle(fontSize: 9, color: PdfColors2.textDark)),
-          pw.SizedBox(height: 2),
+    // Determine the name to show: use attn if available, else customer name
+    final nama = (inv.attn ?? '').isNotEmpty
+        ? inv.attn!
+        : (cu.name ?? '-');
+
+    final kepadaRows = <List<String>>[
+      if ((cu.companyName ?? '').isNotEmpty)
+        ['Perusahaan', cu.companyName!],
+      ['Nama', nama],
+      if ((cu.address ?? '').isNotEmpty)
+        ['Alamat', cu.address!],
+      if ((cu.phone ?? '').isNotEmpty)
+        ['No. Telp', cu.phone!],
+    ];
+
+    return pw.Table(
+      border: pw.TableBorder.all(color: PdfColors.white, width: 0),
+      columnWidths: const {
+        0: pw.FixedColumnWidth(55),
+        1: pw.FixedColumnWidth(8),
+        2: pw.FlexColumnWidth(1),
+      },
+      children: kepadaRows.map((r) => pw.TableRow(
+        children: [
+          pw.Padding(
+            padding: const pw.EdgeInsets.symmetric(vertical: 1),
+            child: pw.Text(r[0],
+                style: r[0] == 'Nama'
+                    ? pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors2.textDark)
+                    : const pw.TextStyle(fontSize: 9, color: PdfColors2.textDark)),
+          ),
+          pw.Padding(
+            padding: const pw.EdgeInsets.symmetric(vertical: 1),
+            child: pw.Text(':',
+                style: const pw.TextStyle(fontSize: 9, color: PdfColors2.textDark)),
+          ),
+          pw.Padding(
+            padding: const pw.EdgeInsets.symmetric(vertical: 1),
+            child: pw.Text(r[1],
+                style: r[0] == 'Nama'
+                    ? pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors2.textDark)
+                    : const pw.TextStyle(fontSize: 9, color: PdfColors2.textDark)),
+          ),
         ],
-        pw.Text(cu.address ?? '-',
-            style: const pw.TextStyle(
-                fontSize: 9, color: PdfColors2.textDark)),
-        if ((cu.phone ?? '').isNotEmpty) ...[
-          pw.SizedBox(height: 2),
-          pw.Text('Telp: ${cu.phone}',
-              style: const pw.TextStyle(
-                  fontSize: 9, color: PdfColors2.textDark)),
-        ]
-      ],
+      )).toList(),
     );
   }
 
@@ -827,8 +848,8 @@ class PdfBuilder {
     return pw.Table(
       border: border,
       columnWidths: const {
-        0: pw.FixedColumnWidth(160),
-        1: pw.FixedColumnWidth(90),
+        0: pw.FixedColumnWidth(130),
+        1: pw.FixedColumnWidth(140),
       },
       children: [
         ...rows.map((r) => pw.TableRow(children: [
@@ -840,7 +861,7 @@ class PdfBuilder {
               pw.Padding(
                   padding: const pw.EdgeInsets.all(6),
                   child: pw.Text(r[1],
-                      textAlign: pw.TextAlign.left,
+                      textAlign: pw.TextAlign.right,
                       style: const pw.TextStyle(fontSize: 9))),
             ])),
         pw.TableRow(
@@ -856,7 +877,7 @@ class PdfBuilder {
             pw.Padding(
                 padding: const pw.EdgeInsets.all(6),
                 child: pw.Text(currency.format(inv.grandTotal ?? 0),
-                    textAlign: pw.TextAlign.left,
+                    textAlign: pw.TextAlign.right,
                     style: pw.TextStyle(
                         color: PdfColors.white,
                         fontWeight: pw.FontWeight.bold,
