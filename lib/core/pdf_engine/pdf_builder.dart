@@ -85,8 +85,7 @@ class PdfBuilder {
   //   • setiap widget di build() dibungkus _padded() untuk margin kiri/kanan
   //   • pw.Table (items) juga dibungkus _padded() agar kolom sejajar
   // =========================================================================
-  static pw.MultiPage _buildMultiPage1(
-      Invoice inv, Company? co, Customer? cu) {
+  static pw.MultiPage _buildMultiPage1(Invoice inv, Company? co, Customer? cu) {
     final currency =
         NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
 
@@ -116,8 +115,7 @@ class PdfBuilder {
         ],
         // Tabel
         _padded(_buildItemsTable(inv, currency,
-            headerBg: PdfColors2.elegantDark,
-            headerText: PdfColors.white)),
+            headerBg: PdfColors2.elegantDark, headerText: PdfColors.white)),
         _padded(pw.SizedBox(height: 16)),
         // Summary
         _padded(pw.Row(
@@ -137,8 +135,7 @@ class PdfBuilder {
           padding: const pw.EdgeInsets.all(10),
           decoration: pw.BoxDecoration(
             border: pw.Border.all(color: PdfColors2.grey300),
-            borderRadius:
-                const pw.BorderRadius.all(pw.Radius.circular(4)),
+            borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
           ),
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -169,8 +166,8 @@ class PdfBuilder {
       children: [
         pw.Container(
           width: double.infinity,
-          padding: const pw.EdgeInsets.fromLTRB(
-              _kSideMargin, 36, _kSideMargin, 24),
+          padding:
+              const pw.EdgeInsets.fromLTRB(_kSideMargin, 36, _kSideMargin, 24),
           color: PdfColors2.elegantDark,
           child: pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -188,8 +185,7 @@ class PdfBuilder {
                     if ((co?.slogan ?? '').isNotEmpty)
                       pw.Text(co?.slogan ?? '',
                           style: const pw.TextStyle(
-                              color: PdfColors.white,
-                              fontSize: 10)),
+                              color: PdfColors.white, fontSize: 10)),
                     if ((co?.branchName ?? '').isNotEmpty)
                       pw.Text(co?.branchName ?? '',
                           style: const pw.TextStyle(
@@ -234,8 +230,7 @@ class PdfBuilder {
   // =========================================================================
   // TEMPLATE 2: Minimalist Modern (normal margin, header dengan garis)
   // =========================================================================
-  static pw.MultiPage _buildMultiPage2(
-      Invoice inv, Company? co, Customer? cu) {
+  static pw.MultiPage _buildMultiPage2(Invoice inv, Company? co, Customer? cu) {
     final currency =
         NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     return pw.MultiPage(
@@ -255,22 +250,18 @@ class PdfBuilder {
           pw.SizedBox(height: 20),
         ],
         if ((inv.introText ?? '').isNotEmpty) ...[
-          pw.Text(inv.introText ?? '',
-              style: const pw.TextStyle(fontSize: 9)),
+          pw.Text(inv.introText ?? '', style: const pw.TextStyle(fontSize: 9)),
           pw.SizedBox(height: 20),
         ],
         _buildItemsTable(inv, currency,
-            headerBg: PdfColors2.elegantDark,
-            headerText: PdfColors.white),
+            headerBg: PdfColors2.elegantDark, headerText: PdfColors.white),
         pw.SizedBox(height: 16),
-        pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.end,
-            children: [
-              pw.SizedBox(
-                  width: 270,
-                  child: _buildSummary(inv, currency,
-                      accentColor: PdfColors2.elegantDark)),
-            ]),
+        pw.Row(mainAxisAlignment: pw.MainAxisAlignment.end, children: [
+          pw.SizedBox(
+              width: 270,
+              child: _buildSummary(inv, currency,
+                  accentColor: PdfColors2.elegantDark)),
+        ]),
         pw.SizedBox(height: 20),
         pw.Container(
           width: double.infinity,
@@ -313,8 +304,7 @@ class PdfBuilder {
                         if ((co?.slogan ?? '').isNotEmpty)
                           pw.Text(co?.slogan ?? '',
                               style: const pw.TextStyle(
-                                  fontSize: 9,
-                                  color: PdfColors2.textDark)),
+                                  fontSize: 9, color: PdfColors2.textDark)),
                         pw.SizedBox(height: 2),
                         pw.Text(co?.address ?? '',
                             style: const pw.TextStyle(
@@ -348,9 +338,7 @@ class PdfBuilder {
         ),
         pw.SizedBox(height: 16),
         pw.Container(
-            width: double.infinity,
-            height: 1,
-            color: PdfColors2.elegantDark),
+            width: double.infinity, height: 1, color: PdfColors2.elegantDark),
         pw.SizedBox(height: 16),
       ],
     );
@@ -364,8 +352,7 @@ class PdfBuilder {
   //   • header menggunakan lebar penuh natural
   //   • setiap konten di-_padded()
   // =========================================================================
-  static pw.MultiPage _buildMultiPage3(
-      Invoice inv, Company? co, Customer? cu) {
+  static pw.MultiPage _buildMultiPage3(Invoice inv, Company? co, Customer? cu) {
     final currency =
         NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     return pw.MultiPage(
@@ -393,18 +380,15 @@ class PdfBuilder {
         ],
         // Tabel
         _padded(_buildItemsTable(inv, currency,
-            headerBg: PdfColors2.elegantDark,
-            headerText: PdfColors.white)),
+            headerBg: PdfColors2.elegantDark, headerText: PdfColors.white)),
         _padded(pw.SizedBox(height: 16)),
         // Summary
-        _padded(pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.end,
-            children: [
-              pw.SizedBox(
-                  width: 270,
-                  child: _buildSummary(inv, currency,
-                      accentColor: PdfColors2.elegantDark)),
-            ])),
+        _padded(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.end, children: [
+          pw.SizedBox(
+              width: 270,
+              child: _buildSummary(inv, currency,
+                  accentColor: PdfColors2.elegantDark)),
+        ])),
         _padded(pw.SizedBox(height: 20)),
         // Terbilang
         _padded(pw.Container(
@@ -432,8 +416,8 @@ class PdfBuilder {
         pw.Container(
           width: double.infinity,
           color: PdfColors2.elegantDark,
-          padding: const pw.EdgeInsets.fromLTRB(
-              _kSideMargin, 36, _kSideMargin, 16),
+          padding:
+              const pw.EdgeInsets.fromLTRB(_kSideMargin, 36, _kSideMargin, 16),
           child: pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
             crossAxisAlignment: pw.CrossAxisAlignment.end,
@@ -450,8 +434,7 @@ class PdfBuilder {
                       if ((co?.slogan ?? '').isNotEmpty)
                         pw.Text(co?.slogan ?? '',
                             style: const pw.TextStyle(
-                                color: PdfColors.white,
-                                fontSize: 10)),
+                                color: PdfColors.white, fontSize: 10)),
                     ]),
               ),
               pw.Text(inv.documentType ?? 'INVOICE',
@@ -466,15 +449,14 @@ class PdfBuilder {
         pw.Container(
           width: double.infinity,
           color: PdfColors2.elegantDarkLight,
-          padding: const pw.EdgeInsets.fromLTRB(
-              _kSideMargin, 8, _kSideMargin, 8),
+          padding:
+              const pw.EdgeInsets.fromLTRB(_kSideMargin, 8, _kSideMargin, 8),
           child: pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
             crossAxisAlignment: pw.CrossAxisAlignment.center,
             children: [
               pw.Expanded(
-                child: pw.Text(
-                    '${co?.address ?? ''} | Tel: ${co?.phone ?? ''}',
+                child: pw.Text('${co?.address ?? ''} | Tel: ${co?.phone ?? ''}',
                     style: const pw.TextStyle(
                         fontSize: 8, color: PdfColors2.elegantDark)),
               ),
@@ -495,8 +477,7 @@ class PdfBuilder {
   // =========================================================================
   // TEMPLATE 4: Clean Elegant (normal margin, minimal lines)
   // =========================================================================
-  static pw.MultiPage _buildMultiPage4(
-      Invoice inv, Company? co, Customer? cu) {
+  static pw.MultiPage _buildMultiPage4(Invoice inv, Company? co, Customer? cu) {
     final currency =
         NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     return pw.MultiPage(
@@ -526,19 +507,15 @@ class PdfBuilder {
             headerText: PdfColors2.elegantDark,
             bordered: false),
         pw.SizedBox(height: 20),
-        pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.end,
-            children: [
-              pw.SizedBox(
-                  width: 270,
-                  child: _buildSummary(inv, currency,
-                      accentColor: PdfColors2.elegantDark, bordered: false)),
-            ]),
+        pw.Row(mainAxisAlignment: pw.MainAxisAlignment.end, children: [
+          pw.SizedBox(
+              width: 270,
+              child: _buildSummary(inv, currency,
+                  accentColor: PdfColors2.elegantDark, bordered: false)),
+        ]),
         pw.SizedBox(height: 16),
         pw.Container(
-            width: double.infinity,
-            height: 0.5,
-            color: PdfColors2.grey300),
+            width: double.infinity, height: 0.5, color: PdfColors2.grey300),
         pw.SizedBox(height: 6),
         pw.Text('Terbilang: ${inv.terbilang ?? ''}',
             style: pw.TextStyle(
@@ -563,13 +540,11 @@ class PdfBuilder {
                 letterSpacing: 1)),
         if ((co?.slogan ?? '').isNotEmpty)
           pw.Text(co?.slogan ?? '',
-              style: const pw.TextStyle(
-                  fontSize: 10,
-                  color: PdfColors2.textDark)),
+              style:
+                  const pw.TextStyle(fontSize: 10, color: PdfColors2.textDark)),
         pw.SizedBox(height: 2),
         pw.Text('${co?.address ?? ''} | Tel: ${co?.phone ?? ''}',
-            style: const pw.TextStyle(
-                fontSize: 8, color: PdfColors2.textDark)),
+            style: const pw.TextStyle(fontSize: 8, color: PdfColors2.textDark)),
         pw.SizedBox(height: 20),
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -586,17 +561,14 @@ class PdfBuilder {
                             color: PdfColors2.grey300)),
                   ]),
             ),
-            pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.end,
-                children: [
-                  pw.Text('No. ${inv.invoiceNumber ?? '-'}',
-                      style: pw.TextStyle(
-                          fontSize: 11,
-                          fontWeight: pw.FontWeight.bold)),
-                  pw.Text('Tanggal: ${_fmtDate(inv.date)}',
-                      style: const pw.TextStyle(
-                          fontSize: 9, color: PdfColors2.textDark)),
-                ]),
+            pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.end, children: [
+              pw.Text('No. ${inv.invoiceNumber ?? '-'}',
+                  style: pw.TextStyle(
+                      fontSize: 11, fontWeight: pw.FontWeight.bold)),
+              pw.Text('Tanggal: ${_fmtDate(inv.date)}',
+                  style: const pw.TextStyle(
+                      fontSize: 9, color: PdfColors2.textDark)),
+            ]),
           ],
         ),
         pw.Container(
@@ -612,18 +584,13 @@ class PdfBuilder {
   // ─── Shared: Kepada Details ───────────────────────────────────────────────
   static pw.Widget _buildKepadaDetails(Invoice inv, Customer cu) {
     // Determine the name to show: use attn if available, else customer name
-    final nama = (inv.attn ?? '').isNotEmpty
-        ? inv.attn!
-        : (cu.name ?? '-');
+    final nama = (inv.attn ?? '').isNotEmpty ? inv.attn! : (cu.name ?? '-');
 
     final kepadaRows = <List<String>>[
-      if ((cu.companyName ?? '').isNotEmpty)
-        ['Perusahaan', cu.companyName!],
+      if ((cu.companyName ?? '').isNotEmpty) ['Perusahaan', cu.companyName!],
       ['Nama', nama],
-      if ((cu.address ?? '').isNotEmpty)
-        ['Alamat', cu.address!],
-      if ((cu.phone ?? '').isNotEmpty)
-        ['No. Telp', cu.phone!],
+      if ((cu.address ?? '').isNotEmpty) ['Alamat', cu.address!],
+      if ((cu.phone ?? '').isNotEmpty) ['No. Telp', cu.phone!],
     ];
 
     return pw.Table(
@@ -633,29 +600,40 @@ class PdfBuilder {
         1: pw.FixedColumnWidth(8),
         2: pw.FlexColumnWidth(1),
       },
-      children: kepadaRows.map((r) => pw.TableRow(
-        children: [
-          pw.Padding(
-            padding: const pw.EdgeInsets.symmetric(vertical: 1),
-            child: pw.Text(r[0],
-                style: r[0] == 'Nama'
-                    ? pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors2.textDark)
-                    : const pw.TextStyle(fontSize: 9, color: PdfColors2.textDark)),
-          ),
-          pw.Padding(
-            padding: const pw.EdgeInsets.symmetric(vertical: 1),
-            child: pw.Text(':',
-                style: const pw.TextStyle(fontSize: 9, color: PdfColors2.textDark)),
-          ),
-          pw.Padding(
-            padding: const pw.EdgeInsets.symmetric(vertical: 1),
-            child: pw.Text(r[1],
-                style: r[0] == 'Nama'
-                    ? pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors2.textDark)
-                    : const pw.TextStyle(fontSize: 9, color: PdfColors2.textDark)),
-          ),
-        ],
-      )).toList(),
+      children: kepadaRows
+          .map((r) => pw.TableRow(
+                children: [
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(vertical: 1),
+                    child: pw.Text(r[0],
+                        style: r[0] == 'Nama'
+                            ? pw.TextStyle(
+                                fontSize: 9,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors2.textDark)
+                            : const pw.TextStyle(
+                                fontSize: 9, color: PdfColors2.textDark)),
+                  ),
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(vertical: 1),
+                    child: pw.Text(':',
+                        style: const pw.TextStyle(
+                            fontSize: 9, color: PdfColors2.textDark)),
+                  ),
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.symmetric(vertical: 1),
+                    child: pw.Text(r[1],
+                        style: r[0] == 'Nama'
+                            ? pw.TextStyle(
+                                fontSize: 9,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors2.textDark)
+                            : const pw.TextStyle(
+                                fontSize: 9, color: PdfColors2.textDark)),
+                  ),
+                ],
+              ))
+          .toList(),
     );
   }
 
@@ -748,7 +726,14 @@ class PdfBuilder {
       children: [
         pw.TableRow(
           decoration: pw.BoxDecoration(color: headerBg),
-          children: ['No', 'Nama Barang', 'Qty', 'Satuan', 'Harga Satuan', 'Total']
+          children: [
+            'No',
+            'Nama Barang',
+            'Qty',
+            'Satuan',
+            'Harga Satuan',
+            'Jumlah Harga'
+          ]
               .map((h) => pw.Padding(
                     padding: const pw.EdgeInsets.all(6),
                     child: pw.Text(h,
@@ -783,31 +768,26 @@ class PdfBuilder {
                     children: [
                       pw.Text(item.itemName ?? '-',
                           style: pw.TextStyle(
-                              fontSize: 9,
-                              fontWeight: pw.FontWeight.bold)),
+                              fontSize: 9, fontWeight: pw.FontWeight.bold)),
                       if ((item.specification ?? '').isNotEmpty)
                         pw.Text(item.specification!,
                             style: const pw.TextStyle(
-                                fontSize: 7,
-                                color: PdfColors2.textDark)),
+                                fontSize: 7, color: PdfColors2.textDark)),
                     ]),
               ),
               pw.Padding(
                   padding: const pw.EdgeInsets.all(5),
-                  child: pw.Text(
-                      '${(item.qty ?? 0).toInt()}',
+                  child: pw.Text('${(item.qty ?? 0).toInt()}',
                       textAlign: pw.TextAlign.center,
                       style: const pw.TextStyle(fontSize: 8))),
               pw.Padding(
                   padding: const pw.EdgeInsets.all(5),
-                  child: pw.Text(
-                      item.unit ?? '',
+                  child: pw.Text(item.unit ?? '',
                       textAlign: pw.TextAlign.center,
                       style: const pw.TextStyle(fontSize: 8))),
               pw.Padding(
                   padding: const pw.EdgeInsets.all(5),
-                  child: pw.Text(
-                      currency.format(item.sellingPrice ?? 0),
+                  child: pw.Text(currency.format(item.sellingPrice ?? 0),
                       style: const pw.TextStyle(fontSize: 8))),
               pw.Padding(
                   padding: const pw.EdgeInsets.all(5),
@@ -834,8 +814,7 @@ class PdfBuilder {
     );
 
     final rows = [
-      if (!inv.hideSubtotal)
-        ['Subtotal', currency.format(inv.subtotal ?? 0)],
+      if (!inv.hideSubtotal) ['Subtotal', currency.format(inv.subtotal ?? 0)],
       if ((inv.discountTotal ?? 0) > 0)
         ['Diskon', '-${currency.format(inv.discountTotal ?? 0)}'],
       if (!inv.hideTax && (inv.taxRate ?? 0) > 0)
@@ -848,8 +827,8 @@ class PdfBuilder {
     return pw.Table(
       border: border,
       columnWidths: const {
-        0: pw.FixedColumnWidth(130),
-        1: pw.FixedColumnWidth(140),
+        0: pw.FixedColumnWidth(175),
+        1: pw.FixedColumnWidth(95),
       },
       children: [
         ...rows.map((r) => pw.TableRow(children: [
@@ -859,9 +838,9 @@ class PdfBuilder {
                       style: const pw.TextStyle(
                           fontSize: 9, color: PdfColors2.textDark))),
               pw.Padding(
-                  padding: const pw.EdgeInsets.all(6),
+                  padding: const pw.EdgeInsets.all(5),
                   child: pw.Text(r[1],
-                      textAlign: pw.TextAlign.right,
+                      textAlign: pw.TextAlign.left,
                       style: const pw.TextStyle(fontSize: 9))),
             ])),
         pw.TableRow(
@@ -875,9 +854,9 @@ class PdfBuilder {
                         fontWeight: pw.FontWeight.bold,
                         fontSize: 10))),
             pw.Padding(
-                padding: const pw.EdgeInsets.all(6),
+                padding: const pw.EdgeInsets.all(5),
                 child: pw.Text(currency.format(inv.grandTotal ?? 0),
-                    textAlign: pw.TextAlign.right,
+                    textAlign: pw.TextAlign.left,
                     style: pw.TextStyle(
                         color: PdfColors.white,
                         fontWeight: pw.FontWeight.bold,
