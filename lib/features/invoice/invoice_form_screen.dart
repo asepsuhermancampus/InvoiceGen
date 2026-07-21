@@ -649,6 +649,7 @@ class _ItemDialogState extends State<_ItemDialog> {
           ],
         ),
       ),
+      ),
       actions: [
         TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
         ElevatedButton(
