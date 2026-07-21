@@ -105,7 +105,7 @@ class PdfBuilder {
                   color: PdfColors2.grey600,
                   fontWeight: pw.FontWeight.bold))),
           _padded(pw.SizedBox(height: 4)),
-          _padded(_buildKepadaDetails(cu)),
+          _padded(_buildKepadaDetails(inv, cu)),
           _padded(pw.SizedBox(height: 20)),
         ],
         // Intro
@@ -187,10 +187,9 @@ class PdfBuilder {
                             fontWeight: pw.FontWeight.bold)),
                     if ((co?.slogan ?? '').isNotEmpty)
                       pw.Text(co?.slogan ?? '',
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                               color: PdfColors.white,
-                              fontSize: 10,
-                              fontStyle: pw.FontStyle.italic)),
+                              fontSize: 10)),
                     if ((co?.branchName ?? '').isNotEmpty)
                       pw.Text(co?.branchName ?? '',
                           style: const pw.TextStyle(
@@ -252,7 +251,7 @@ class PdfBuilder {
                   fontWeight: pw.FontWeight.bold,
                   color: PdfColors2.grey600)),
           pw.SizedBox(height: 4),
-          _buildKepadaDetails(cu),
+          _buildKepadaDetails(inv, cu),
           pw.SizedBox(height: 20),
         ],
         if ((inv.introText ?? '').isNotEmpty) ...[
@@ -313,9 +312,8 @@ class PdfBuilder {
                                 color: PdfColors2.textDark)),
                         if ((co?.slogan ?? '').isNotEmpty)
                           pw.Text(co?.slogan ?? '',
-                              style: pw.TextStyle(
+                              style: const pw.TextStyle(
                                   fontSize: 9,
-                                  fontStyle: pw.FontStyle.italic,
                                   color: PdfColors2.textDark)),
                         pw.SizedBox(height: 2),
                         pw.Text(co?.address ?? '',
@@ -384,7 +382,7 @@ class PdfBuilder {
                   fontWeight: pw.FontWeight.bold,
                   color: PdfColors2.elegantDark))),
           _padded(pw.SizedBox(height: 4)),
-          _padded(_buildKepadaDetails(cu)),
+          _padded(_buildKepadaDetails(inv, cu)),
           _padded(pw.SizedBox(height: 20)),
         ],
         // Intro
@@ -451,10 +449,9 @@ class PdfBuilder {
                               fontWeight: pw.FontWeight.bold)),
                       if ((co?.slogan ?? '').isNotEmpty)
                         pw.Text(co?.slogan ?? '',
-                            style: pw.TextStyle(
+                            style: const pw.TextStyle(
                                 color: PdfColors.white,
-                                fontSize: 10,
-                                fontStyle: pw.FontStyle.italic)),
+                                fontSize: 10)),
                     ]),
               ),
               pw.Text(inv.documentType ?? 'INVOICE',
@@ -515,7 +512,7 @@ class PdfBuilder {
                   fontWeight: pw.FontWeight.bold,
                   color: PdfColors2.grey600)),
           pw.SizedBox(height: 4),
-          _buildKepadaDetails(cu),
+          _buildKepadaDetails(inv, cu),
           pw.SizedBox(height: 20),
         ],
         if ((inv.introText ?? '').isNotEmpty)
@@ -566,9 +563,8 @@ class PdfBuilder {
                 letterSpacing: 1)),
         if ((co?.slogan ?? '').isNotEmpty)
           pw.Text(co?.slogan ?? '',
-              style: pw.TextStyle(
+              style: const pw.TextStyle(
                   fontSize: 10,
-                  fontStyle: pw.FontStyle.italic,
                   color: PdfColors2.textDark)),
         pw.SizedBox(height: 2),
         pw.Text('${co?.address ?? ''} | Tel: ${co?.phone ?? ''}',
@@ -614,28 +610,30 @@ class PdfBuilder {
   }
 
   // ─── Shared: Kepada Details ───────────────────────────────────────────────
-  static pw.Widget _buildKepadaDetails(Customer cu) {
+  static pw.Widget _buildKepadaDetails(Invoice inv, Customer cu) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.Text('Nama: ${cu.name ?? '-'}',
+        pw.Text((cu.companyName ?? '').isNotEmpty ? cu.companyName! : (cu.name ?? '-'),
             style: pw.TextStyle(
                 fontSize: 10,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors2.textDark)),
         pw.SizedBox(height: 2),
-        if ((cu.companyName ?? '').isNotEmpty) ...[
-          pw.Text('Perusahaan: ${cu.companyName}',
-              style: const pw.TextStyle(fontSize: 9)),
+        if ((inv.attn ?? '').isNotEmpty) ...[
+          pw.Text('U.P.: ${inv.attn}',
+              style: const pw.TextStyle(fontSize: 9, color: PdfColors2.textDark)),
           pw.SizedBox(height: 2),
         ],
-        pw.Text('Alamat: ${cu.address ?? '-'}',
+        pw.Text(cu.address ?? '-',
             style: const pw.TextStyle(
                 fontSize: 9, color: PdfColors2.textDark)),
-        pw.SizedBox(height: 2),
-        pw.Text('No.Telp/Fax: ${cu.phone ?? '-'}',
-            style: const pw.TextStyle(
-                fontSize: 9, color: PdfColors2.textDark)),
+        if ((cu.phone ?? '').isNotEmpty) ...[
+          pw.SizedBox(height: 2),
+          pw.Text('Telp: ${cu.phone}',
+              style: const pw.TextStyle(
+                  fontSize: 9, color: PdfColors2.textDark)),
+        ]
       ],
     );
   }
@@ -721,10 +719,10 @@ class PdfBuilder {
       columnWidths: const {
         0: pw.FixedColumnWidth(30),
         1: pw.FlexColumnWidth(3),
-        2: pw.FixedColumnWidth(40),
-        3: pw.FixedColumnWidth(40),
-        4: pw.FixedColumnWidth(80),
-        5: pw.FixedColumnWidth(90),
+        2: pw.FixedColumnWidth(35),
+        3: pw.FixedColumnWidth(55),
+        4: pw.FixedColumnWidth(85),
+        5: pw.FixedColumnWidth(95),
       },
       children: [
         pw.TableRow(
@@ -823,11 +821,6 @@ class PdfBuilder {
         [
           'PPN ${inv.taxRate?.toStringAsFixed(0)}%',
           currency.format(inv.taxTotal ?? 0)
-        ],
-      if (!inv.hideTax && (inv.pphRate ?? 0) > 0)
-        [
-          'PPH ${inv.pphRate?.toStringAsFixed(0)}%',
-          '-${currency.format(inv.pphRate ?? 0)}'
         ],
     ];
 
