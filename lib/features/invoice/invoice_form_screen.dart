@@ -51,14 +51,10 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   static const String _kCustomIntro = '__custom__';
   String _selectedIntroKey = '';
   static final Map<String, String> _introTemplates = {
-    'Penawaran Harga': 'Bersama dengan ini kami sampaikan penawaran harga untuk kebutuhan Anda. '
-        'Kami berharap penawaran ini dapat memenuhi harapan Anda.',
-    'Invoice': 'Berikut kami sampaikan tagihan atas pekerjaan/barang yang telah diselesaikan/dikirimkan. '
-        'Mohon pembayaran dapat dilakukan sesuai dengan syarat pembayaran yang tercantum.',
-    'Quotation': 'Thank you for the opportunity to quote. Please find our price quotation as follows. '
-        'We hope to be of service to you.',
-    'Proforma Invoice': 'Berikut kami sampaikan proforma invoice sebagai dasar pembayaran di muka '
-        'sebelum pengiriman barang/jasa dilakukan.',
+    'Penawaran Harga': 'Dengan hormat, bersama surat ini kami sampaikan penawaran harga sesuai dengan kebutuhan Bapak/Ibu. Kami berharap penawaran ini dapat menjadi bahan pertimbangan dan terjalin kerja sama yang baik.',
+    'Invoice': 'Dengan hormat, bersama surat ini kami sampaikan Invoice atas barang dan/atau jasa yang telah kami berikan. Atas perhatian dan kerja sama yang baik, kami ucapkan terima kasih.',
+    'Quotation': 'We are pleased to submit our quotation for your consideration. We trust this proposal meets your requirements and look forward to the opportunity of serving your company.',
+    'Proforma Invoice': 'Dengan hormat, bersama surat ini kami sampaikan Proforma Invoice sebagai acuan nilai transaksi sebelum proses pengiriman barang dan/atau pelaksanaan jasa. Dokumen ini dapat digunakan sebagai referensi untuk proses administrasi dan pembayaran sesuai kesepakatan.',
     'Kosong (Tanpa Teks)': '',
     'Custom': _kCustomIntro,
   };
