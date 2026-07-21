@@ -294,7 +294,7 @@ Halaman pengaturan untuk konfigurasi global aplikasi.
 - ✅ Nomor & tanggal dokumen
 - ✅ Bagian "KEPADA:" (Perusahaan, Nama, Alamat, No. Telp)
 - ✅ Teks pembuka (opsional)
-- ✅ Tabel item (No, Nama Barang, Qty, Satuan, Harga Satuan, Total)
+- ✅ Tabel item (No, Nama Barang, Qty, Satuan, Harga Satuan, Jumlah Harga)
 - ✅ Summary (Subtotal, PPN, TOTAL)
 - ✅ Terbilang
 - ✅ Catatan & Syarat Pembayaran

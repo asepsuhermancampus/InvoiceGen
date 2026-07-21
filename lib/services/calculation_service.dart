@@ -8,7 +8,7 @@ class CalculationService {
       return 'Minus ${terbilang(-number)}';
     }
     
-    int num = number.toInt();
+    int num = number.round();
     
     if (num < 12) {
       return _satuan[num];
