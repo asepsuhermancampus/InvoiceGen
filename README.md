@@ -173,7 +173,7 @@ Tap tombol **"+ Tambah Item"** untuk menambah barang/jasa.
 | **Nama Barang** | Nama item/jasa |
 | **Spesifikasi** | Detail spesifikasi (opsional) |
 | **Qty** | Jumlah |
-| **Satuan** | Pilih: Pcs, Unit, Set, Lot, Paket, Bulan, Tahun, Meter, Kg, Box, Roll, Lembar, Rim |
+| **Satuan** | Pilih: Pcs, Unit, Set, Psg, Lbr, Pack, Box, Dus, Roll, Sak, Lusin, Kg, Ons, Ton, Mm, Cm, M, Mtr, Km, Inch |
 | **Harga Jual** | Harga per satuan |
 
 > **💡 Tips:** Item yang sudah ditambahkan bisa di-**edit** (ikon pensil) atau di-**hapus** (ikon tempat sampah).
@@ -237,21 +237,18 @@ Gunakan filter chip di bagian atas untuk menyaring invoice:
 |------|------|-------------|
 | 📤 **Send** | Ubah status Draft → Sent | Saat status = Draft |
 | ✅ **Paid** | Ubah status Sent → Paid | Saat status = Sent |
-| ↩️ **Undo** | Kembalikan status Paid → Draft | Saat status = Paid |
+| ↩️ **Undo** | Kembalikan status Paid → Sent, atau Sent → Draft | Saat status = Paid atau Sent |
 | 📋 **Duplicate** | Gandakan invoice (nama + "-Clone") | Selalu |
 | ✏️ **Edit** | Edit isi invoice | Selalu |
 | 🗑️ **Hapus** | Hapus invoice permanen | Selalu |
 
 ### Alur Status:
 
-```
+```text
 ┌─────────┐    📤 Send    ┌─────────┐    ✅ Paid    ┌─────────┐
 │  Draft  │ ────────────→ │  Sent   │ ────────────→ │  Paid   │
-│(abu-abu)│               │ (oranye)│               │ (hijau) │
-└─────────┘               └─────────┘               └─────────┘
-     ↑                                                    │
-     │                    ↩️ Undo                          │
-     └────────────────────────────────────────────────────┘
+│(abu-abu)│ ←──────────── │ (oranye)│ ←──────────── │ (hijau) │
+└─────────┘    ↩️ Undo    └─────────┘    ↩️ Undo    └─────────┘
 ```
 
 ### Fitur Duplicate:

@@ -31,6 +31,10 @@ class InvoiceRepository {
     final original = await _isar.invoices.get(id);
     if (original == null) return null;
 
+    await original.company.load();
+    await original.customer.load();
+    await original.template.load();
+
     final duplicate = Invoice()
       ..invoiceNumber = '${original.invoiceNumber}-Clone'
       ..date = DateTime.now()
@@ -41,6 +45,20 @@ class InvoiceRepository {
       ..notes = original.notes
       ..footer = original.footer
       ..status = 'Draft'
+      ..attn = original.attn
+      ..address = original.address
+      ..phone = original.phone
+      ..fax = original.fax
+      ..introText = original.introText
+      ..hideSubtotal = original.hideSubtotal
+      ..hideTax = original.hideTax
+      ..paymentTerms = original.paymentTerms
+      ..signatorName = original.signatorName
+      ..subtotal = original.subtotal
+      ..discountTotal = original.discountTotal
+      ..taxTotal = original.taxTotal
+      ..grandTotal = original.grandTotal
+      ..terbilang = original.terbilang
       ..items = original.items.map((item) {
         return InvoiceItem()
           ..itemName = item.itemName
@@ -75,12 +93,6 @@ class InvoiceRepository {
     
     await _isar.writeTxn(() async {
       await _isar.invoices.put(original);
-      original.company.value = original.company.value;
-      original.customer.value = original.customer.value;
-      original.template.value = original.template.value;
-      await original.company.save();
-      await original.customer.save();
-      await original.template.save();
     });
   }
 }

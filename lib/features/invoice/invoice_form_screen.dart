@@ -43,6 +43,10 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   double _taxRate = 11.0;
   double _pphRate = 0.0;
   
+  List<Company> _companies = [];
+  List<Customer> _customers = [];
+  bool _isLoadingData = true;
+  
   // Teks Pembuka
   static const String _kCustomIntro = '__custom__';
   String _selectedIntroKey = '';
@@ -110,6 +114,33 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
       _invoiceNumberController = TextEditingController(
         text: '$prefix-${ts.year}${ts.month.toString().padLeft(2,'0')}${ts.day.toString().padLeft(2,'0')}-001',
       );
+    }
+    
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    final companies = await ref.read(companyRepositoryProvider).getAllCompanies();
+    final customers = await ref.read(customerRepositoryProvider).getAllCustomers();
+    
+    if (mounted) {
+      setState(() {
+        _companies = companies;
+        _customers = customers;
+        
+        // Find matching references from the loaded list to avoid identity mismatch in dropdowns
+        if (_selectedCompany != null) {
+          _selectedCompany = _companies.where((c) => c.id == _selectedCompany!.id).firstOrNull ?? _selectedCompany;
+        } else {
+          _selectedCompany = _companies.where((c) => c.isDefault).firstOrNull;
+        }
+
+        if (_selectedCustomer != null) {
+          _selectedCustomer = _customers.where((c) => c.id == _selectedCustomer!.id).firstOrNull ?? _selectedCustomer;
+        }
+        
+        _isLoadingData = false;
+      });
     }
   }
 
@@ -250,7 +281,13 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ');
+    if (_isLoadingData) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    
+    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
 
     return Scaffold(
       appBar: AppBar(
@@ -412,34 +449,15 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
             const Divider(),
             
             // Tax & Totals
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    initialValue: _taxRate.toString(),
-                    decoration: const InputDecoration(labelText: 'PPN (%)'),
-                    keyboardType: TextInputType.number,
-                    onChanged: (val) {
-                      _taxRate = double.tryParse(val) ?? 0;
-                      _recalculateTotals();
-                    },
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: TextFormField(
-                    initialValue: _pphRate.toString(),
-                    decoration: const InputDecoration(labelText: 'PPH (%)'),
-                    keyboardType: TextInputType.number,
-                    onChanged: (val) {
-                      _pphRate = double.tryParse(val) ?? 0;
-                      _recalculateTotals();
-                    },
-                  ),
-                ),
-              ],
+            TextFormField(
+              initialValue: _taxRate.toString(),
+              decoration: const InputDecoration(labelText: 'PPN (%)'),
+              keyboardType: TextInputType.number,
+              onChanged: (val) {
+                _taxRate = double.tryParse(val) ?? 0;
+                _recalculateTotals();
+              },
             ),
-            
             const SizedBox(height: 16),
             Row(
               children: [
@@ -499,40 +517,27 @@ class _InvoiceFormScreenState extends ConsumerState<InvoiceFormScreen> {
   }
 
   Widget _buildCompanySelector() {
-    return FutureBuilder<List<Company>>(
-      future: ref.read(companyRepositoryProvider).getAllCompanies(),
-      builder: (context, snapshot) {
-        final items = snapshot.data ?? [];
-        return DropdownButtonFormField<Company>(
-          initialValue: _selectedCompany,
-          decoration: const InputDecoration(labelText: 'Pilih Company'),
-          items: items.map((c) => DropdownMenuItem(value: c, child: Text(c.name ?? ''))).toList(),
-          onChanged: (val) => setState(() => _selectedCompany = val),
-        );
-      }
+    return DropdownButtonFormField<Company>(
+      initialValue: _selectedCompany,
+      decoration: const InputDecoration(labelText: 'Pilih Company'),
+      items: _companies.map((c) => DropdownMenuItem(value: c, child: Text(c.name ?? ''))).toList(),
+      onChanged: (val) => setState(() => _selectedCompany = val),
     );
   }
   
   Widget _buildCustomerSelector() {
-    return FutureBuilder<List<Customer>>(
-      future: ref.read(customerRepositoryProvider).getAllCustomers(),
-      builder: (context, snapshot) {
-        final items = snapshot.data ?? [];
-        return DropdownMenu<Customer?>(
-          initialSelection: _selectedCustomer,
-          label: const Text('Cari / Pilih Customer (Opsional)'),
-          expandedInsets: EdgeInsets.zero,
-          enableFilter: true,
-          requestFocusOnTap: true,
-          onSelected: (val) {
-            setState(() => _selectedCustomer = val);
-          },
-          dropdownMenuEntries: [
-            const DropdownMenuEntry<Customer?>(value: null, label: 'Tidak Ada (Kosong)'),
-            ...items.map((c) => DropdownMenuEntry<Customer?>(value: c, label: c.name ?? '')),
-          ],
-        );
-      }
+    return DropdownButtonFormField<Customer?>(
+      initialValue: _selectedCustomer,
+      decoration: const InputDecoration(labelText: 'Pilih Customer (Opsional)'),
+      items: [
+        const DropdownMenuItem<Customer?>(value: null, child: Text('Tidak Ada (Kosong)')),
+        ..._customers.map((c) => DropdownMenuItem<Customer?>(value: c, child: Text(c.name ?? ''))),
+      ],
+      onChanged: (val) {
+        setState(() {
+          _selectedCustomer = val;
+        });
+      },
     );
   }
 }
@@ -548,8 +553,8 @@ class _ItemDialog extends StatefulWidget {
 
 class _ItemDialogState extends State<_ItemDialog> {
   static const _satuanList = [
-    'Box', 'Bulan', 'Cm', 'Gram', 'Hari', 'Jam', 'Kg', 'Lot', 'Ls', 'Meter', 
-    'Ons', 'Pack', 'Pcs', 'Roll', 'Sak', 'Set', 'Tahun', 'Unit'
+    'Pcs', 'Unit', 'Set', 'Psg', 'Lbr', 'Pack', 'Box', 'Dus', 'Roll', 'Sak', 
+    'Lusin', 'Kg', 'Ons', 'Ton', 'Mm', 'Cm', 'M', 'Mtr', 'Km', 'Inch'
   ];
 
   late TextEditingController _nameCtrl;
@@ -616,13 +621,13 @@ class _ItemDialogState extends State<_ItemDialog> {
                 const SizedBox(width: 8),
                 Expanded(
                   flex: 1,
-                  child: DropdownMenu<String>(
-                    controller: _unitCtrl,
-                    label: const Text('Satuan'),
-                    enableFilter: true,
-                    requestFocusOnTap: true,
-                    expandedInsets: EdgeInsets.zero,
-                    dropdownMenuEntries: _satuanList.map((s) => DropdownMenuEntry(value: s, label: s)).toList(),
+                  child: DropdownButtonFormField<String>(
+                    initialValue: _satuanList.contains(_unitCtrl.text) ? _unitCtrl.text : (_satuanList.isNotEmpty ? _satuanList.first : null),
+                    decoration: const InputDecoration(labelText: 'Satuan'),
+                    items: _satuanList.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                    onChanged: (val) {
+                      if (val != null) _unitCtrl.text = val;
+                    },
                   ),
                 ),
               ]),

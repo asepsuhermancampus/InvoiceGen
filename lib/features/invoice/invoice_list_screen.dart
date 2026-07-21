@@ -222,24 +222,33 @@ class _InvoiceListScreenState extends ConsumerState<InvoiceListScreen> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (inv.status == 'Draft' || inv.status == null)
+                      if (inv.status == 'Draft' || inv.status == null) ...[
                         InkWell(
                           borderRadius: BorderRadius.circular(4),
                           onTap: () => _updateStatus(inv, 'Sent'),
                           child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.send, size: 16, color: Colors.blueGrey)),
                         ),
-                      if (inv.status == 'Sent')
-                        InkWell(
-                          borderRadius: BorderRadius.circular(4),
-                          onTap: () => _updateStatus(inv, 'Paid'),
-                          child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.check_circle_outline, size: 16, color: Colors.green)),
-                        ),
-                      if (inv.status == 'Paid')
+                      ],
+                      if (inv.status == 'Sent') ...[
                         InkWell(
                           borderRadius: BorderRadius.circular(4),
                           onTap: () => _updateStatus(inv, 'Draft'),
                           child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.undo, size: 16, color: Colors.grey)),
                         ),
+                        const SizedBox(width: 4),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(4),
+                          onTap: () => _updateStatus(inv, 'Paid'),
+                          child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.check_circle_outline, size: 16, color: Colors.green)),
+                        ),
+                      ],
+                      if (inv.status == 'Paid') ...[
+                        InkWell(
+                          borderRadius: BorderRadius.circular(4),
+                          onTap: () => _updateStatus(inv, 'Sent'),
+                          child: const Padding(padding: EdgeInsets.all(4), child: Icon(Icons.undo, size: 16, color: Colors.grey)),
+                        ),
+                      ],
                       const SizedBox(width: 4),
                       InkWell(
                         borderRadius: BorderRadius.circular(4),
